@@ -1,0 +1,10 @@
+.el-tooltip__popper.is-light {
+  background: #fff;
+  border: none;
+  color: #606266;
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+}
+
+.el-tooltip__popper .popper__arrow {
+  border-color: transparent !important;
+}

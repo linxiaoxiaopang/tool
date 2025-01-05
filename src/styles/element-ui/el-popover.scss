@@ -1,0 +1,63 @@
+.el-popover {
+  &.update-popper {
+    transition: opacity 0.2s;
+
+    // popover里的内容是动态的时候，需要调用this.$refs.popover.updatePopper()
+    // 解决此时的显示问题
+    &.fade-in-linear-enter-active {
+      opacity: 0 !important;
+    }
+  }
+}
+.el-popover__reference-wrapper {
+  > * {
+    vertical-align: middle;
+  }
+}
+.popover-content-width {
+  min-width: auto;
+  padding: 10px;
+  color: $color-content;
+}
+
+.common-popover {
+  &.el-popper[x-placement^=top] {
+    margin-bottom: 8px;
+  }
+  &.el-popper[x-placement^=right] {
+    margin-left: 8px;
+  }
+  &.el-popper[x-placement^=bottom] {
+    margin-top: 8px;
+  }
+  &.el-popper[x-placement=bottom-start] {
+    margin-left: -12px;
+  }
+  &.el-popper[x-placement^=left] {
+    margin-right: 8px;
+  }
+}
+
+.el-popper {
+  &.el-popover--mini {
+    &[x-placement^=top] {
+      margin-bottom: 2px;
+    }
+
+    &[x-placement^=right] {
+      margin-left: 2px;
+    }
+
+    &[x-placement^=bottom] {
+      margin-top: 2px;
+    }
+
+    &[x-placement=bottom-start] {
+      margin-left: -3px;
+    }
+
+    &[x-placement^=left] {
+      margin-right: 2px;
+    }
+  }
+}

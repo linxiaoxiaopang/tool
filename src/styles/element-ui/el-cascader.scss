@@ -1,0 +1,29 @@
+// el-cascader
+.el-cascader .el-input .el-icon-arrow-down {
+  font-size: 10px;
+}
+.el-cascader-node {
+  .el-radio {
+    position: static;
+  }
+  .el-radio__label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+  }
+}
+.el-cascader__dropdown {
+  @include box-shadow;
+  &[x-placement^=bottom] {
+    margin-top: $placement-distance;
+  }
+  &[x-placement^=top] {
+    margin-bottom: $placement-distance;
+  }
+  .popper__arrow {
+    display: none;
+  }
+}

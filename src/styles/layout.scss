@@ -1,0 +1,43 @@
+#app {
+  overflow: auto hidden;
+}
+
+//main-container全局样式
+.app-container {
+  height: 100%;
+  padding: $app-container-top $app-container-right $app-container-bottom $app-container-left;
+  overflow-y: auto;
+   .message {
+    align-items: normal;
+    width: 1200px;
+    height: 100%;
+    margin: auto;
+    color: $color-title;
+
+    .makeicon {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: red;
+      line-height: 20px;
+      margin-right: 10px;
+      margin-bottom: 2px;
+    }
+  
+  }
+}
+
+//span = 4.8
+.el-col[class*='el-col-4.8'] {
+  width: 20%;
+}
+
+//span = 3.42
+.el-col[class*='el-col-3.42'] {
+  width: calc(100% / 7);
+}
+
+
+
+

@@ -1,0 +1,36 @@
+.el-input {
+  .el-input__suffix {
+    right: 2px;
+    color: $color-content;
+    font-size: 10px;
+  }
+
+  & + & {
+    margin-left: 15px;
+  }
+  // 在新增物流规则selectCondition.vue的dialog中的el-input的el-input__suffix会出现这个图标
+  .el-input__icon.el-input__validateIcon {
+    display: none;
+  }
+}
+.max-width {
+  &.el-input-number.is-controls-right .el-input__inner {
+    padding-left: 5px;
+    padding-right: 33px;
+  }
+}
+.el-input__count {
+  line-height: normal;
+}
+
+.el-input__inner,
+.el-textarea__inner,
+.el-range-input {
+  &::placeholder {
+    color: $color-sub;
+  }
+}
+
+.el-input__inner {
+  @include border-radius();
+}

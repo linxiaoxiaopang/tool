@@ -1,0 +1,159 @@
+.el-button {
+  @include border-radius;
+  border-radius: 2px;
+  // button自身变化
+  &[danger] {
+    color: $color-danger;
+  }
+  &.is-circle {
+    &.el-button--mini {
+      min-width: 28px;
+    }
+  }
+
+  // size
+  &.el-button--mini {
+    @include smallBtn;
+    min-width: 52px;
+    height: 28px;
+  }
+  &.el-button--small {
+    @include smallBtn;
+  }
+
+  &.el-button--text {
+    height: auto;
+    &.el-button {
+      padding: 0;
+    }
+    &.is-disabled {
+      color: $color-primary--disabled;
+    }
+  }
+
+  // 扩展
+  &.text-small {
+    height: 32px;
+    padding: 0 15px;
+    font-size: 14px;
+
+    &.el-button--text {
+      padding: 0;
+    }
+  }
+}
+
+// 默认样式 ↓
+.el-button--normal,
+.el-button--default,
+.el-button--default.is-plain,
+.el-button--dashed {
+  &.is-disabled {
+    border-color: $border-color;
+    background-color: $color-background;
+  }
+}
+.el-button {
+  &.el-button--normal,
+  &.el-button--default,
+  &.el-button--default.is-plain,
+  &.el-button--dashed {
+    &.is-disabled:hover {
+      border-color: $border-color;
+      background-color: $color-background;
+    }
+  }
+}
+.el-button--normal {
+  background-color: $color-white;
+  &:hover,
+  &:focus {
+    border-color: $color-primary;
+    background-color: $color-white;
+  }
+  &:active {
+    border-color: $color-primary--active;
+  }
+}
+
+.el-message-box__wrapper {
+  .el-button--default:not(.el-button--primary) {
+    background-color: $color-white;
+    &:hover,
+    &:focus {
+      border-color: $color-primary;
+    }
+    &:active {
+      border-color: $color-primary--active;
+    }
+  }
+}
+// 默认样式 ↑
+
+.el-button--dashed {
+  @include border-radius('half');
+  border-style: dashed;
+  &:hover,
+  &:focus {
+    border-color: $color-primary;
+    background-color: $color-white;
+  }
+}
+.el-button--gray {
+  border-color: $color-background !important;
+  background-color: $color-background !important;
+  &:hover,
+  &:focus {
+    color: $color-primary;
+  }
+  &:active {
+    color: $color-primary--active;
+  }
+}
+.el-button--blue {
+  color: $color-primary;
+  border-color: $color-primary;
+  background-color: $color-white !important;
+  &:hover,
+  &:focus {
+    color: $color-primary--hover;
+    border-color: $color-primary--hover;
+  }
+  &:active {
+    color: $color-primary--active;
+    border-color: $color-primary--active;
+  }
+}
+.el-button--special {
+  color: $--color-danger;
+  border-color: transparent !important;
+  background: transparent !important;
+  &.el-button {
+    padding: 0;
+  }
+  &.is-disabled {
+    color: $--color-danger--bg !important;
+  }
+  &:hover,
+  &:focus {
+    color: $color-special--hover;
+  }
+  &:active {
+    color: $color-special;
+  }
+}
+
+
+.button-group {
+  .el-button {
+    margin: 0;
+
+    + .el-button {
+      margin-left: 12px;
+    }
+  }
+}
+
+.el-button--primary:focus {
+  background: $color-primary;
+}

@@ -1,0 +1,6 @@
+.el-icon-arrow-down {
+  transition: transform .3s;
+  &.is-reverse {
+    transform: rotateZ(180deg);
+  }
+}

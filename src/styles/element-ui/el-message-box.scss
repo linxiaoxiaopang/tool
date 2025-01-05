@@ -1,0 +1,142 @@
+.el-message-box__wrapper {
+  .form-message {
+    width: auto;
+    padding-bottom: 20px;
+    .el-message-box__header {
+      padding: 16px 20px;
+      .el-message-box__title {
+        line-height: 24px;
+        font-size: 16px;
+        color: #303133;
+      }
+      .el-message-box__headerbtn {
+        top: 18px;
+        right: 20px;
+      }
+    }
+    .el-message-box__content {
+      padding: 20px 188px 20px 20px;
+    }
+    .el-message-box__btns {
+      padding: 10px 20px 0;
+    }
+  }
+}
+.el-message-box:not(.el-message-box--center) {
+  .el-message-box__header {
+    border-bottom: 1px solid #dcdee0;
+    .el-message-box__title {
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+  }
+  .el-message-box__message {
+    font-size: 16px;
+    color: #1a1a1a;
+  }
+}
+
+.common-message {
+  width: 424px;
+  padding-bottom: 15px;
+
+  .el-message-box__header {
+    padding: 22px 26px 5px;
+    border-bottom: none;
+  }
+
+  .el-message-box__title {
+    justify-content: flex-start;
+    font-size: $text-medium;
+    font-weight: bold;
+    color: $color-title;
+  }
+
+  .el-message-box__status {
+    left: -2px;
+    padding-right: 10px;
+    font-size: 20px !important;
+    font-weight: 500;
+  }
+
+  .el-message-box__headerbtn {
+    top: 26px;
+    right: 24px;
+    font-size: $close-size;
+
+    .el-message-box__close {
+      color: #a0a0a0;
+    }
+  }
+
+  .el-message-box__content {
+    padding: 0 24px 0 58px;
+    text-align: left;
+    color: $color-title;
+  }
+
+  .el-message-box__btns {
+    padding: 26px 24px 0;
+    text-align: right;
+
+    .el-button {
+      min-width: 64px;
+      padding: 0 10px;
+      border-radius: $border-radius--mini;
+    }
+  }
+}
+.el-message-box--warning {
+  .el-message-box__header {
+    //padding-top: 15px;
+  }
+  .el-message-box__status {
+    color: $color-warning-icon;
+  }
+}
+
+.el-message-box {
+  .el-button--primary:focus {
+    background: $color-primary;
+  }
+}
+
+.payment-waiting-message {
+  .el-message-box__message {
+    white-space: pre-line;
+  }
+}
+
+.payment-success-message,
+.payment-failed-message {
+  padding-bottom: 30px;
+  .el-message-box__header {
+    border-bottom: none !important;
+    .el-message-box__title {
+      display: none;
+    }
+  }
+  .el-message-box__content {
+    padding: 0;
+    text-align: center;
+  }
+  .el-message-box__status {
+    top: 21px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding-right: 0;
+    font-size: 45px !important;
+  }
+  .el-message-box__message {
+    padding: 74px 0 0;
+    font-weight: bold;
+  }
+  .el-message-box__btns {
+    padding-top: 46px;
+    text-align: center;
+    .el-button {
+      min-width: 210px;
+    }
+  }
+}

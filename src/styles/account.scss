@@ -1,0 +1,30 @@
+.colors {
+  padding: 0 8px 10px 0;
+  width: 100%;
+  overflow: auto;
+  white-space: nowrap;
+  .color-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 16%;
+    white-space: nowrap;
+    padding-top: 16%;
+    margin-right: 4%;
+    margin-bottom: 5px;
+  }
+  .color {
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    width: calc(100%);
+    height: calc(100%);
+    border: 1px solid;
+    color: $border-color;
+  }
+  .color.active {
+    color: $--color-primary;
+  }
+  // .color + .color {
+  //   margin-left: 10px;
+  // }
+}

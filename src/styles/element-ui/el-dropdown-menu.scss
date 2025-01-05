@@ -1,0 +1,49 @@
+.el-dropdown, .el-dropdown-menu {
+  .el-dropdown-menu__item:hover {
+    @include hover();
+  }
+  .el-dropdown-menu__item {
+    line-height: 32px;
+  }
+}
+
+.common-dropdown-menu {
+  border-radius: 2px;
+  &[x-placement^=top] {
+    margin-bottom: 8px;
+  }
+  &[x-placement^=bottom] {
+    margin-top: 8px;
+  }
+  &[x-placement^=left] {
+    margin-right: 8px;
+  }
+  &[x-placement^=right] {
+    margin-left: 8px;
+  }
+
+  &[x-placement=top-start] {
+    margin-left: -10px;
+  }
+  &[x-placement=top-end] {
+    margin-right: -10px;
+  }
+  &[x-placement=bottom-start] {
+    margin-left: -10px;
+  }
+  &[x-placement=bottom-end] {
+    margin-right: -10px;
+  }
+  &[x-placement=left-start] {
+    margin-top: -10px;
+  }
+  &[x-placement=left-end] {
+    margin-bottom: -10px;
+  }
+  &[x-placement=right-start] {
+    margin-top: -10px;
+  }
+  &[x-placement=right-end] {
+    margin-bottom: -10px;
+  }
+}

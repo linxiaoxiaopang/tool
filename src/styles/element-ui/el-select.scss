@@ -1,0 +1,29 @@
+.el-select .el-input .el-select__caret {
+  font-size: 10px;
+}
+
+.el-select-dropdown {
+  @include box-shadow;
+  &[x-placement^=bottom] {
+    margin-top: $placement-distance;
+  }
+  &[x-placement^=top] {
+    margin-bottom: $placement-distance;
+  }
+  .popper__arrow {
+    display: none;
+  }
+}
+.el-select-dropdown__item {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 20px;
+  font-size: 13px;
+  &.hover,
+  &:hover {
+    background-color: $color-background--extensive;
+  }
+  &.selected {
+    font-weight: 400;
+  }
+}

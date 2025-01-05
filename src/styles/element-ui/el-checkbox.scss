@@ -1,0 +1,74 @@
+.el-checkbox {
+  $size: 16px;
+  .el-checkbox__input {
+    &.is-disabled {
+      .el-checkbox__inner {
+        background-color: $color-background--extensive;
+      }
+      &.is-checked,
+      &.is-indeterminate {
+        .el-checkbox__inner {
+          border-color: $color-placeholder;
+        }
+      }
+    }
+    &.is-checked {
+      + .el-checkbox__label {
+        color: $color-content;
+      }
+    }
+  }
+  .el-checkbox__inner {
+    width: $size;
+    height: $size;
+    &::after {
+      top: 1px;
+      left: 5px;
+      width: 3px;
+      height: 8px;
+    }
+  }
+  .is-indeterminate {
+    .el-checkbox__inner::before {
+      top: 6px;
+    }
+  }
+}
+.el-checkbox {
+  color: $color-content;
+  &.top-left {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 666;
+  }
+  &.no-label {
+    .el-checkbox__label {
+      display: none;
+    }
+  }
+}
+
+.disabled-normal {
+  .el-checkbox.is-disabled {
+    .el-checkbox__input.is-disabled {
+      .el-checkbox__inner {
+        background-color: #FFF;
+      }
+      &.is-checked .el-checkbox__inner {
+        background-color: #3841DB;
+        border-color: #3841DB;
+      }
+      .el-checkbox__inner::after {
+        border-color: #FFF;
+      }
+    }
+
+    .el-checkbox__inner::after,
+    .el-checkbox__inner,
+    .el-checkbox__label {
+      color: #666;
+      cursor: pointer!important;
+    }
+  }
+}

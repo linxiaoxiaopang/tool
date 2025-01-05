@@ -1,0 +1,341 @@
+.order-base-page {
+  tr:not(.bg-color) {
+    td {
+      color: $color-title;
+      vertical-align: top;
+    }
+  }
+  .table-operation {
+    .el-button {
+      color: $color-primary;
+    }
+    .el-button--text {
+      height: auto;
+      line-height: 1;
+    }
+  }
+
+  .danger {
+    color: $color-danger;
+  }
+
+
+  #tab-productionOvertime,
+  #tab-inProductionUrgent,
+  #tab-deleted {
+    color: $color-danger;
+  }
+}
+
+.product-info {
+  .table-cell-expand__item {
+    overflow: hidden;
+  }
+  .default-img-popover-wrapper {
+    margin-top: 6px;
+    margin-right: 9px;
+  }
+  .info__separate {
+    margin: 0 9px;
+    color: $color-sub;
+  }
+}
+
+// 订单详情
+.detailOrEditComponent-common-class {
+  color: $color-title;
+  background-color: $bg-color;
+  .product-wrapper {
+    color: #636c78;
+    .product-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .wrapper {
+      display: flex;
+    }
+    .el-image {
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      margin-right: 20px;
+      border-radius: 4px;
+      background: $bg-color;
+      border: 1px solid $color-background--extensive;
+      > img {
+        mix-blend-mode: multiply;
+      }
+    }
+    .wrapper {
+      flex: 1;
+      overflow: hidden;
+    }
+    .info-wrapper {
+      flex: 1;
+      line-height: 21px;
+      margin-top: -3px;
+      overflow: hidden;
+    }
+    .operation-wrapper {
+      padding-left: 15px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      > * {
+        vertical-align: middle;
+        + * {
+          margin-left: 15px;
+        }
+      }
+    }
+    .item {
+      margin-right: 20px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    .to-be-associated {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+  .el-drawer__body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .customClass {
+      position: relative;
+      top: 35px;
+      .el-form {
+        padding: 0;
+        margin-top: -25px;
+      }
+      .el-form-item {
+        margin-bottom: 36px;
+      }
+      .el-form-item__label {
+        padding-right: 6px;
+      }
+    }
+  }
+
+  .drawerTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 65px;
+    background-color: $color-background;
+    padding: 20px;
+    position: relative;
+    font-size: $text-medium;
+    font-weight: 500;
+    .title {
+      display: flex;
+    }
+    .importTime {
+      margin-left: 50px;
+    }
+    i {
+      cursor: pointer;
+    }
+  }
+  .drawerBody {
+    flex: 1;
+    padding: 21px 40px 40px 34px;
+    background-color: #fff;
+    overflow: auto;
+  }
+  .bodyTitle {
+    position: relative;
+    //border-left: 2px solid blue;
+    margin-bottom: 10px;
+    line-height: 36px;
+    display: flex;
+    justify-content: space-between;
+    &::before {
+      content: '';
+      position: absolute;
+      left: -14px;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      height: 6px;
+      margin: auto;
+      background-color: blue;
+    }
+    &.is-border {
+      border-bottom: $border;
+    }
+    > span {
+      font-size: $text-medium;
+    }
+    .edit {
+      position: absolute;
+      right: 25px;
+      margin-top: -10px;
+    }
+  }
+  .el-icon-delete {
+    position: relative;
+    font-size: 16px;
+    color: $color-primary;
+  }
+  .is-delete-product {
+    &::after {
+      top: 21px;
+      right: 3px;
+      bottom: 20px;
+      left: 2px;
+    }
+  }
+
+  .editProductExternalSkuCodeClass {
+    color: $--color-primary;
+    font-size: 16px;
+  }
+  .relation-btn {
+    font-size: 24px;
+  }
+  .item:not(:last-child) {
+    margin-bottom: 20px;
+  }
+  .common-table {
+    td {
+      padding: 20px 0;
+      &:first-child {
+        padding-left: 10px;
+      }
+      &:last-child {
+        padding-right: 10px;
+      }
+    }
+  }
+  .bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    box-shadow: 0 0 10px 1px #999;
+    top: 10px;
+    .el-button.el-button {
+      margin-left: 15px;
+    }
+  }
+  .productShowCoverHeaderSlot {
+    margin-right: 10px;
+  }
+  .el-input-number {
+    min-width: 80px !important;
+  }
+
+  .express-table {
+    .el-table__row:not(:last-child) {
+      .cell,
+      .cell > * {
+        color: $color-info !important;
+      }
+    }
+  }
+}
+// 新增产品
+.add-pro-dialog {
+  .avue-form {
+    padding-right: 52px;
+  }
+}
+
+.applyForAfterSales-dialog {
+  .avue-form {
+    margin-bottom: 12px;
+    .avue-form__row--dicItemId .el-select {
+      width: 246px;
+    }
+  }
+  &.unproduced-dialog {
+    .avue-form__row--applyReasonDetail,
+    .avue-form__row--businessContactMobile {
+      padding-left: 21px !important;
+    }
+  }
+  &.inProduction-dialog {
+    .el-radio-group {
+      width: 100%;
+    }
+    .refund-way-item {
+      width: 100%;
+
+      + .refund-way-item {
+        margin-top: 30px;
+      }
+    }
+
+    .el-radio {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .el-radio__input {
+      font-size: 0;
+    }
+    .el-radio__label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 1;
+      line-height: calc(1em + 2px);
+      font-weight: 500;
+
+      > * {
+        height: calc(1em + 2px);
+      }
+    }
+    .inProduction-express-table {
+      .el-radio__label {
+        overflow: hidden;
+        .name {
+          width: 45%;
+        }
+        .price {
+          width: 20%;
+          text-align: center;
+        }
+        .time {
+          width: 35%;
+          text-align: right;
+        }
+        .name,
+        .price,
+        .time {
+          flex-shrink: 0;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+  &.produced-dialog {
+    margin-top: 10vh !important;
+    .avue-form__group {
+      .el-col {
+        &:nth-child(1),
+        &:nth-child(2) {
+          .el-form-item {
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+
+    .file-upload-component {
+      .item .file-wrapper .icon-wrapper {
+        height: calc(100% - 20px);
+      }
+    }
+  }
+}

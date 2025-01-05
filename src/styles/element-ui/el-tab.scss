@@ -1,0 +1,13 @@
+.el-tabs__item:focus.is-active.is-focus:not(:active) {
+  box-shadow: none;
+}
+
+.tabs-active-border--primary {
+  .el-tabs {
+    .el-tabs__item.is-active.is-active.is-active {
+      outline: 1px solid $color-primary;
+      outline-offset: -1px;
+      border-color: transparent;
+    }
+  }
+}

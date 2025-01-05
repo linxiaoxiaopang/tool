@@ -1,0 +1,23 @@
+
+//大图的删除按钮
+.el-image-viewer__btn.el-image-viewer__close {
+  .el-icon-circle-close {
+    font-size: 50px;
+    color: #fff;
+  }
+}
+
+.global-image_multiply.el-image {
+  background: $color-background;
+  transform: scale(1);
+  img {
+    mix-blend-mode: multiply;
+  }
+}
+
+.global-clear_multiply {
+  background: initial;
+  img {
+    mix-blend-mode: initial;
+  }
+}

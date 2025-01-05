@@ -1,0 +1,25 @@
+//to reset element-ui default css
+.el-drawer {
+  &.order-drawer {
+    .el-drawer__header {
+      flex-shrink: 0;
+      height: 65px;
+      padding: 0 16px 0 30px;
+      margin-bottom: 0;
+      background-color: $color-background;
+      color: $color-title;
+
+      .el-dialog__close {
+        font-size: $text-small;
+        color: $color-content;
+      }
+    }
+    .el-drawer__body {
+      padding: 32px 40px 40px 32px;
+      overflow: auto;
+    }
+  }
+}
+.v-modal {
+  background-color: rgba(0, 0, 0, 0.46);
+}

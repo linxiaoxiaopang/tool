@@ -1,0 +1,46 @@
+.el-date-editor {
+  &.el-input__inner {
+    &,
+    &:hover {
+      border-color: $border-color;
+    }
+  }
+  &.el-input__inner.el-range-editor {
+    width: 266px;
+  }
+  .el-range-separator {
+    width: auto;
+    color: $color-sub;
+  }
+}
+.el-picker-panel {
+  @include box-shadow;
+  border: none;
+  .popper__arrow {
+    display: none;
+  }
+  &[x-placement^=bottom] {
+    margin-top: $placement-distance;
+  }
+  &[x-placement^=top] {
+    margin-bottom: $placement-distance;
+  }
+}
+
+.el-range-editor--small {
+  .el-range-input {
+    font-size: $text-small;
+  }
+  .el-range-separator {
+    font-size: 14px;
+
+    .el-range-separator {
+      line-height: 28px;
+    }
+
+    .el-range__close-icon,
+    .el-range__icon {
+      line-height: 26px;
+    }
+  }
+}

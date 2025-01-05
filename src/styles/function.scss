@@ -1,0 +1,17 @@
+/* layout */
+$screen-width: 1440;
+$screen-height: 1170;
+@function layoutX($x) {
+  @return $x * 1px
+  //@return $x / $screen-width * 100vw
+}
+@function layoutY($y) {
+  @return $y * 1px
+  //@return $y / $screen-height * 100vh
+}
+@function elementX($x) {
+  @return $x * 1px
+}
+@function elementY($y) {
+  @return $y * 1px
+}

@@ -1,0 +1,57 @@
+// 默认样式
+.el-table {
+  border: $border--table;
+  border-right: none;
+  border-bottom: none;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #EBEEF5;
+    z-index: 2000;
+  }
+  th, td {
+    padding: 8px 0;
+    border-color: $border-color--table;
+  }
+  th {
+    color: $color-label;
+    font-weight: 400;
+    border-bottom: $border--table;
+    background-color: $color-background--extensive;
+  }
+}
+
+.el-table {
+  td {
+    &.td-left {
+      border-left: $border--table;
+    }
+    &.td-right {
+      border-right: $border--table;
+    }
+  }
+  .is-visible {
+    .cell {
+      visibility: visible !important;
+    }
+  }
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td {
+  background-color: $color-background;
+}
+
+.td-border {
+  td:not(.el-table-column--selection) {
+    border-right: $border--table;
+  }
+}
+
+.public-table {
+  td {
+    height: 56px;
+  }
+}

@@ -1,0 +1,26 @@
+.el-col[class*='el-col-3.428'] {
+  width: 14.2857%;
+}
+
+.el-row {
+  &.no-empty:empty {
+    display: none;
+  }
+}
+
+.el-row:empty::before {
+  content: '暂无内容';
+  width: 100%;
+  text-align: center;
+  line-height: 150px;
+  height: 150px;
+  color: $color-gray;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  //box-shadow: 0 0 5px 1px #eee;
+  font-size: 18px;
+}
+.el-row:empty {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}

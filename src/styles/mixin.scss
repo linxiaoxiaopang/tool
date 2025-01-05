@@ -1,0 +1,419 @@
+// layout
+@mixin border-radius($size: default, $height: 28) {
+  @if ($size == 'half') {
+    height: $height * 1px;
+    line-height: ($height - 3) * 1px;
+    border-radius: $height / 2 * 1px;
+  } @else if ($size == 'circle') {
+    border-radius: 50%;
+  } @else if ($size == 'medium') {
+    border-radius: $border-radius--medium;
+  } @else {
+    border-radius: $border-radius--mini;
+  }
+}
+
+@mixin box-shadow {
+  box-shadow: $box-shadow;
+  &:hover {
+    box-shadow: $box-shadow--hover;
+  }
+}
+
+@mixin border {
+  border: $border;
+}
+
+@mixin width($X, $min, $max: undefined) {
+  width: layoutX($X);
+  @if ($min) {
+    min-width: $min * 1px;
+  }
+  @if ($max != undefined) {
+    max-width: $max * 1px;
+  } @else if ($X) {
+    max-width: $X * 1px;
+  }
+}
+
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin scrollBar {
+  &::-webkit-scrollbar-track-piece {
+    background: #d3dce6;
+  }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #99a9bf;
+    border-radius: 20px;
+  }
+}
+
+@mixin relative {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+//超出一行文本省略
+@mixin overflow() {
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+//多行超出文本省略
+@mixin overflow-more($num) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $num;
+  display: -moz-box;
+  -moz-line-clamp: $num !important;
+  -moz-box-orient: vertical;
+  overflow: hidden;
+}
+
+//清除浮动
+@mixin clearfix {
+  &:after {
+    clear: both;
+    content: '.';
+    display: block;
+    height: 0;
+    line-height: 0;
+    overflow: hidden;
+  }
+  *height: 1%;
+}
+
+//绝对剧中
+@mixin center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+//垂直居中(绝对定位)
+@mixin vaCenter {
+  position: absolute;
+  top:50%;
+  transform: translateY(-50%);
+}
+
+//垂直居中
+@mixin vCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+//竖直方向水平数值居中排序居中
+@mixin vhCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+//水平方居中
+@mixin hvCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+//水平方向水平数值居中排序居中
+@mixin hvCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin jcFlex {
+  @include hvCenter;
+  justify-content: space-between;
+}
+
+@mixin colors($color: blue) {
+  background-color: $color;
+  @content;
+  border-color: $color;
+}
+
+@mixin bgImg($url, $size:cover) {
+  background-size: $size;
+  background-image: url($url);
+}
+
+//绝对定位
+@mixin absPos($top: 0, $right: 0, $bottom: 0, $left: 0) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+
+}
+
+//text overflow ellipsis
+@mixin ellipsisOne {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+@mixin ellipsis($num) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $num;
+  -webkit-box-orient: vertical;
+}
+
+//padding
+
+@mixin p($top, $right, $bottom, $left) {
+  padding: $top $right, $bottom, $left !important;
+}
+
+//margin
+@mixin m($top, $right, $bottom, $left) {
+  margin: $top $right, $bottom, $left !important;
+}
+
+//超出一行文本省略
+@mixin overflow() {
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+//多行超出文本省略
+@mixin overflow-more($num) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $num;
+  display: -moz-box;
+  -moz-line-clamp: $num !important;
+  -moz-box-orient: vertical;
+  overflow: hidden;
+}
+
+//清除浮动
+@mixin clearfix {
+  &:after {
+    clear: both;
+    content: '.';
+    display: block;
+    height: 0;
+    line-height: 0;
+    overflow: hidden;
+  }
+  *height: 1%;
+}
+
+//绝对剧中
+@mixin center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+//垂直居中
+@mixin vCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+//竖直方向水平数值居中排序居中
+@mixin vhCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+//水平方居中
+@mixin hvCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+//水平方向水平数值居中排序居中
+@mixin hvCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin jcFlex {
+  @include hvCenter;
+  justify-content: space-between;
+}
+
+@mixin colors($color: blue) {
+  background-color: $color;
+  @content;
+  border-color: $color;
+}
+
+@mixin bgImg($url, $size:cover) {
+  background-size: $size;
+  background-image: url($url);
+}
+
+//绝对定位
+@mixin absPos($top: 0, $right: 0, $bottom: 0, $left: 0) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+// 竖杠
+@mixin montantLeft {
+  display: flex;
+  align-items: center;
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 1em;
+    margin-right: 8px;
+    background-color: $color-primary;
+  }
+}
+
+@mixin elMenuItem {
+  min-width: 190px !important;
+  height: $menuHeight;
+  line-height: $menuHeight;
+  background-color: $subMenuBg !important;
+  &:hover {
+    color: $color-title !important;
+    background-color: $menuHover !important;
+  }
+  &.is-active {
+    background-color: $menuHover !important;
+  }
+}
+
+@mixin smallBtn {
+  //min-width: 62px;
+  height: 32px;
+  padding: 0 10px;
+  font-size: 14px;
+  border-radius: 2px;
+}
+
+@mixin hoverPrimary {
+  color: $color-primary;
+  background: rgba(53, 105, 253, 0.0600);
+}
+
+//@mixin circle {
+//  display: inline-block;
+//  min-width: 23px;
+//  height: 23px;
+//  padding: 0 4px;
+//  background: #F7F8FA;
+//  border: 1px solid #DCDEE0;
+//  color: $color-content;
+//  text-align: center;
+//  border-radius: 50%;
+//}
+
+// 三角形
+@mixin triangle($x, $y: $x, $direction: top, $color: null) {
+  @if ($direction == 'top') {
+    border-top: $y solid $color;
+    border-left: $x / 2 solid transparent;
+    border-right: $x / 2 solid transparent;
+  } @else if ($direction == 'bottom') {
+    border-bottom: $y solid $color;
+    border-left: $x / 2 solid transparent;
+    border-right: $x / 2 solid transparent;
+  } @else if ($direction == 'right') {
+    border-right: $x solid $color;
+    border-top: $y / 2 solid transparent;
+    border-bottom: $y / 2 solid transparent;
+  } @else if ($direction == 'left') {
+    border-left: $x solid $color;
+    border-top: $y / 2 solid transparent;
+    border-bottom: $y / 2 solid transparent;
+  }
+}
+
+@mixin hover() {
+  color: $color-content;
+  background: $color-background--extensive;
+}
+
+@mixin mask($zIndex: 1, $top: 0, $right: 0, $bottom: 0, $left: 0, $background: $bg-light-opacity) {
+  @include absPos($top, $right, $bottom, $left);
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background: $background;
+  z-index: $zIndex;
+  &::before {
+    content: "\e780";
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    color: #fff;
+  }
+}
+
+@mixin bg-opacity($opacity: 0.2) {
+  background: rgba(0, 0, 0, $opacity);
+}
+
+@mixin circle($w: 6px, $h: 6px, $color: $color-primary) {
+  width: $w;
+  height: $h;
+  border-radius: 50%;
+  background: $color;
+}
+
+@mixin bg-transparent {
+  position: relative;
+  font-size: 0;
+  box-sizing: border-box;
+  background: #f1f3f5;
+  background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.15) 25%, transparent 0, transparent 75%, rgba(0, 0, 0, 0.15) 0), linear-gradient(45deg, rgba(0, 0, 0, 0.15) 25%, transparent 0, transparent 75%, rgba(0, 0, 0, 0.15) 0);
+  background-position: 0 0, 15px 15px;
+  background-size: 32px 32px;
+}
+
+
+@mixin formItemMarginBottom($size: 24) {
+  $size: $size * 1px;
+  .el-form-item {
+    margin-bottom: $size;
+  }
+  // 使form组件上下margin为0
+  .avue-form__group {
+    top: $size;
+    margin-top: -$size;
+  }
+}
