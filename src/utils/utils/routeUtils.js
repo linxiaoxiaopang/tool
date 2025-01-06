@@ -23,6 +23,15 @@ export const ROUTER_MAP_LIST = [
         matchRouteList: ['/export']
       }
     ]
+  },
+  {
+    title: 'xlsx',
+    children: [
+      {
+        title: 'xlsx',
+        matchRouteList: ['/xlsx']
+      }
+    ]
   }
 ]
 

@@ -60,6 +60,22 @@ const superRouter = [
         children: []
       }
     ]
+  },
+  {
+    path: '/xlsx',
+    name: '/xlsx',
+    component: 'Layout',
+    redirect: '/xlsx/keyword',
+    meta: { title: 'xlsx', icon: 'prototype' },
+    children: [
+      {
+        name: 'keyword',
+        path: 'keyword',
+        component: 'xlsx/keyword',
+        meta: { title: '关键词', icon: 'prototype' },
+        children: []
+      }
+    ]
   }
 ]
 export default superRouter

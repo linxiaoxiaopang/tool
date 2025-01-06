@@ -48,7 +48,8 @@ export default {
       type: Number,
       default: Infinity
     },
-    isMergeCell: Boolean
+    isMergeCell: Boolean,
+    keepOrigin: Boolean
   },
   computed: {
     rABS() {
@@ -289,12 +290,19 @@ export default {
             typeof item[tableHeader[i]] === 'number' ||
             typeof item[tableHeader[i]] === 'string'
           ) {
-            rowItem[tableHeader[i]] =
-              item[tableHeader[i]]
-                .toString()
-                .replace(/^\s+/, '')
-                .replace(/\s+$/, '')
-                .replace(/^['‘’]/, '') || ''
+            if(this.keepOrigin) {
+              rowItem[tableHeader[i]] =
+                item[tableHeader[i]]
+                  .toString()
+            } else {
+              rowItem[tableHeader[i]] =
+                item[tableHeader[i]]
+                  .toString()
+                  .replace(/^\s+/, '')
+                  .replace(/\s+$/, '')
+                  .replace(/^['‘’]/, '') || ''
+            }
+
           } else {
             rowItem[tableHeader[i]] = item[tableHeader[i]] || ''
           }
