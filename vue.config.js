@@ -48,7 +48,7 @@ function resolve(dir) {
 
 module.exports = {
   lintOnSave: isDev,
-  publicPath: isDev ? './' : '/',
+  publicPath: isDev ? './' : './',
   outputDir: 'dist',
   productionSourceMap: isDev,
 
