@@ -27,7 +27,7 @@ export const constantRouterMap = [
     name: 'topic',
     component: Layout,
     hidden: true,
-    redirect: '/mock',
+    redirect: '/xlsx'
   },
   {
     path: '/login',
