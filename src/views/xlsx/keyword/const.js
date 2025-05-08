@@ -1,6 +1,7 @@
 export const headerDicList = {
   title: 'title',
   delete: 'deleteKeyword',
+  keepKeywords: 'keepKeywords',
   replace: 'replaceKeyword',
   color: 'colorKeyword',
   used: 'usedKeyword',
@@ -16,6 +17,10 @@ export const dic = [
   {
     label: '删除关键字',
     value: headerDicList.delete
+  },
+  {
+    label: '保留关键字',
+    value: headerDicList.keepKeywords
   },
   {
     label: '待替换关键字',

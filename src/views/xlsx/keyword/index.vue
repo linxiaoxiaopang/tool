@@ -108,9 +108,23 @@ export default {
       const delItems = this.column.filter(item => item.keywordType == headerDicList.delete)
       const replaceItems = this.column.filter(item => item.keywordType == headerDicList.replace)
       const usedItems = this.column.filter(item => item.keywordType == headerDicList.used)
+      const keepKeywordsItems = this.column.filter(item => item.keywordType == headerDicList.keepKeywords)
       const orderKeywordItems = this.column.filter(item => item.keywordType == headerDicList.color || item.keywordType == headerDicList.suffix || item.keywordType == headerDicList.suffixAndColor)
       this.data.map(item => {
         let title = item[titleItem.prop]
+        keepKeywordsItems.map((sItem) => {
+          const value = item[sItem.prop]
+          const spliceValues = value.split(/,|，/)
+          let matchData = []
+          spliceValues.map(gItem => {
+            const reg = new RegExp(gItem, 'ig')
+            const matchValues = title.match(reg)
+            if(!matchValues) return
+            matchData.push(...matchValues)
+          })
+          title = matchData.join(' ')
+        })
+
         delItems.map((sItem) => {
           const delValue = item[sItem.prop]
           const spliceDelValues = delValue.split(/,|，/)
