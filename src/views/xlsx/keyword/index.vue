@@ -117,12 +117,14 @@ export default {
           const spliceValues = value.split(/,|，/)
           let matchData = []
           spliceValues.map(gItem => {
-            const reg = new RegExp(gItem, 'ig')
+            const reg = new RegExp(`\\b${gItem}\\b`, 'ig')
             const matchValues = title.match(reg)
             if(!matchValues) return
             matchData.push(...matchValues)
           })
-          title = matchData.join(' ')
+          const spliceTitle = title.split(/ +/)
+          const result = spliceTitle.filter(item => matchData.includes(item))
+          title = result.join(' ')
         })
 
         delItems.map((sItem) => {
