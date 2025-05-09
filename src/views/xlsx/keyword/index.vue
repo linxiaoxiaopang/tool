@@ -37,7 +37,7 @@ import XlsxTable from '@/components/xlsxTable.vue'
 import HeaderSelect from './module/headerSelect'
 import { headerDicList } from './const'
 import { getUUID } from '@/utils'
-import { map } from 'lodash'
+import { map, uniq } from 'lodash'
 
 export default {
   components: {
@@ -124,7 +124,7 @@ export default {
           })
           const spliceTitle = title.split(/ +/)
           const result = spliceTitle.filter(item => matchData.includes(item))
-          title = result.join(' ')
+          title = uniq(result).join(' ')
         })
 
         delItems.map((sItem) => {
