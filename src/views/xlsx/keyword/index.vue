@@ -131,7 +131,7 @@ export default {
           const delValue = item[sItem.prop]
           const spliceDelValues = delValue.split(/,|，/)
           spliceDelValues.map(gItem => {
-            const reg = new RegExp(gItem, 'ig')
+            const reg = new RegExp(`\\b${gItem}\\b`, 'ig')
             title = title.replace(reg, '')
           })
         })
@@ -160,7 +160,7 @@ export default {
             title += suffixValue
           }
         })
-        item.formatTitle = title.trim()
+        item.formatTitle = uniq(title.trim().split(/ +/)).join(' ')
       })
       this.data = [...this.data]
     },
