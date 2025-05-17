@@ -74,6 +74,13 @@ const superRouter = [
         component: 'xlsx/keyword',
         meta: { title: '关键词', icon: 'prototype' },
         children: []
+      },
+      {
+        name: 'mangoerp',
+        path: 'mangoerp',
+        component: 'xlsx/mangoerp',
+        meta: { title: '解析芒果店长表格', icon: 'prototype' },
+        children: []
       }
     ]
   }
