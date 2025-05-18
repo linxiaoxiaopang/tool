@@ -81,6 +81,13 @@ const superRouter = [
         component: 'xlsx/mangoerp',
         meta: { title: '解析芒果店长表格', icon: 'prototype' },
         children: []
+      },
+      {
+        name: 'translate',
+        path: 'translate',
+        component: 'xlsx/translate',
+        meta: { title: '翻译', icon: 'prototype' },
+        children: []
       }
     ]
   }

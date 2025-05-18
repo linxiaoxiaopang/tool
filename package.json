@@ -47,6 +47,7 @@
     "@sentry/vue": "^7.4.1",
     "@tinymce/tinymce-vue": "^3.2.1",
     "axios": "^0.21.1",
+    "axios-jsonp": "^1.0.4",
     "better-scroll": "^2.0.5",
     "clipboard": "1.7.1",
     "compressorjs": "^1.0.7",
