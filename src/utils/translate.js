@@ -11,7 +11,7 @@ const jsonpClient = axios.create({
 const baidu = {
   appid: '20240102001927895',
   key: 'yXzTz3znmVPXNN_nqsoj',
-  url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
+  url: '//api.fanyi.baidu.com/api/trans/vip/translate',
   headers: {
     type: 'get',
     dataType: 'jsonp',
