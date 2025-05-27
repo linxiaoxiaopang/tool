@@ -88,6 +88,13 @@ const superRouter = [
         component: 'xlsx/translate',
         meta: { title: '翻译', icon: 'prototype' },
         children: []
+      },
+      {
+        name: 'price',
+        path: 'price',
+        component: 'xlsx/price',
+        meta: { title: '价格测算', icon: 'prototype' },
+        children: []
       }
     ]
   }

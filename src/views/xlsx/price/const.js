@@ -1,0 +1,48 @@
+export const ORDER_KEYS = {
+  sku: 'SKU',
+  consigneeCountryCode: '国家',
+  consigneeDetailAddress: '收货人地址',
+  consigneeCity: '收货人城市',
+  consigneeName: '收货人',
+  productCount: '产品数量',
+  expressCompanyName: '物流方式',
+  // expressCompanyId: '物流公司id',
+  consigneeContactPhone: '收货人电话',
+  consigneeContactMobilePhone: '收货人手机号码',
+  consigneeProvince: '收货人州/省',
+  orderCode: '订单号',
+  expressWaybillCode: '运单号',
+  consigneePostcode: '邮编',
+  salesman: '业务员',
+  dept: '部门',
+  totalPrice: '销售金额',
+  externalFreight: '运费',
+  buyerId: '买家ID（非必填）'
+}
+
+export const option = {
+  menu: false,
+  column: [
+    {
+      label: '客户',
+      prop: 'customer'
+    },
+    {
+      label: '购买车型',
+      prop: 'purchasedModel'
+    },
+    { label: '车架号', prop: 'vinNumber' },
+    { label: '贷款产品', prop: 'loanProduct' },
+    { label: '贷款金额', prop: 'loanAmount' },
+    { label: '店端贷款利润', prop: 'dealerLoanProfit' },
+    { label: '客户贷款贴息', prop: 'customerInterestSubsidy' },
+    { label: '保险赠送', prop: 'insuranceGift' },
+    { label: '超出自律会金额', prop: 'amountExceedingRegulation' },
+    { label: '开票价计算', prop: 'invoicePriceCalculation' },
+    { label: '一级毛利', prop: 'grossProfitLevel1' },
+    { label: '二级毛利', prop: 'grossProfitLevel2' },
+    { label: '三级毛利', prop: 'grossProfitLevel3' },
+    { label: '订单综合毛利', prop: 'orderTotalGrossProfit' },
+    { label: '备注', prop: 'remarks' }
+  ]
+}
