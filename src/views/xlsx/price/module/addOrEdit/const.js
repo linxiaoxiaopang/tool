@@ -1,31 +1,10 @@
-import { accSub, accAdd, accMul } from '@/utils'
-
-export const purchasedModelDic = [
-  {
-    label: '宋DM智驾',
-    value: '宋DM智驾',
-    guidePrice: '145800',
-    tradeTypeData: {
-      0: 0,
-      1: 6000,
-      2: 8000
-    },
-    regulationDiscount: '10000'
-  },
-  {
-    label: '海狮07DM智驾',
-    value: '海狮07智驾',
-    guidePrice: '165800',
-    tradeTypeData: {
-      0: 0,
-      1: 9000,
-      2: 11000
-    },
-    regulationDiscount: '16000'
-  }
-]
+import { CalculationCar } from './utils'
 
 export function getFormOption() {
+  const instance = new CalculationCar({
+    vmInstance: this
+  })
+
   const formOption = {
     labelWidth: 120,
     column: [
@@ -37,9 +16,9 @@ export function getFormOption() {
         label: '购买车型',
         prop: 'purchasedModel',
         type: 'select',
-        dicData: purchasedModelDic,
+        dicData: instance.dic,
         control: () => {
-          calcPurchasedModel.call(this)
+          instance.calcPurchasedModel()
         }
       },
       {
@@ -55,43 +34,71 @@ export function getFormOption() {
           value: '0.14'
         }],
         control: () => {
-          calcDealerLoanProfit.call(this, this.form)
+          instance.calcDealerLoanProfit()
         }
       },
       {
         label: '贷款金额',
         prop: 'loanAmount',
         control: () => {
-          calcDealerLoanProfit.call(this, this.form)
-        }
-      },
-      {
-        label: '客户贷款贴息',
-        prop: 'customerInterestSubsidy',
-        control: (value) => {
-          calcDealerLoanProfit.call(this, this.form)
-          this.invoicePriceCalculationForm.financialSubsidy = value
+          instance.calcFinancialSubsidy()
+          instance.calcDealerLoanProfit()
+          instance.calcGrossProfitLevel3()
         }
       },
       {
         label: '店端贷款利润',
         prop: 'dealerLoanProfit',
+        control: () => {
+          instance.calcGrossProfitLevel2()
+        },
         type: 'text'
       },
+      {
+        label: '客户贷款贴息',
+        prop: 'customerInterestSubsidy',
+        control() {
+          instance.calcCustomerInterestSubsidy()
+        }
+      },
       { label: '保险赠送', prop: 'insuranceGift' },
-      { label: '超出自律会金额', prop: 'amountExceedingRegulation' },
+      {
+        label: '超出自律会金额',
+        prop: 'amountExceedingRegulation',
+        type: 'text'
+      },
       {
         label: '开票价计算',
         prop: 'invoicePriceCalculation',
         control: () => {
-          calcGrossProfitLevel1.call(this)
+          instance.calcGrossProfitLevel1()
         }
+      },
+      {
+        label: '上牌费用',
+        prop: 'registrationFee',
+        type: 'select',
+        value: 500,
+        dicData: [
+          {
+            label: '0',
+            value: 0
+          },
+          {
+            label: '500',
+            value: 500
+          },
+          {
+            label: '300',
+            value: 300
+          }
+        ]
       },
       {
         label: '一级毛利',
         prop: 'grossProfitLevel1',
         control: () => {
-          calcOrderTotalGrossProfit.call(this)
+          instance.calcOrderTotalGrossProfit()
         },
         type: 'text'
       },
@@ -99,15 +106,17 @@ export function getFormOption() {
         label: '二级毛利',
         prop: 'grossProfitLevel2',
         control: () => {
-          calcOrderTotalGrossProfit.call(this)
-        }
+          instance.calcOrderTotalGrossProfit()
+        },
+        type: 'text'
       },
       {
         label: '三级毛利',
         prop: 'grossProfitLevel3',
         control: () => {
-          calcOrderTotalGrossProfit.call(this)
-        }
+          instance.calcOrderTotalGrossProfit()
+        },
+        type: 'text'
       },
       {
         label: '订单综合毛利',
@@ -121,23 +130,33 @@ export function getFormOption() {
 }
 
 export function getInvoicePriceCalculationFormOption() {
+  const instance = new CalculationCar({
+    vmInstance: this
+  })
+
   const invoicePriceCalculationFormOption = {
-    column: [ // 修改为 columns（标准表格配置属性名）
-      { label: '指导价', prop: 'guidePrice' },
-      { label: '自律会优惠', prop: 'regulationDiscount' },
-      { label: '金融补贴', prop: 'financialSubsidy' },
+    column: [
+      {
+        label: '指导价',
+        prop: 'guidePrice',
+        type: 'text'
+      },
+      {
+        label: '自律会优惠',
+        prop: 'regulationDiscount',
+        type: 'text'
+      },
+      {
+        label: '金融补贴',
+        prop: 'financialSubsidy',
+        type: 'text'
+      },
       {
         label: '置换类型',
         prop: 'tradeType',
         type: 'select',
-        control: (value, form) => {
-          const tradeTypeData = this.currentPurchased?.tradeTypeData
-          if (!tradeTypeData) {
-            form.tradeInSubsidy = 0
-            return
-          }
-          value = value || 0
-          form.tradeInSubsidy = tradeTypeData[value]
+        control: () => {
+          instance.calcTradeInSubsidy()
         },
         dicData: [
           {
@@ -159,7 +178,7 @@ export function getInvoicePriceCalculationFormOption() {
         prop: 'tradeInSubsidy',
         type: 'text',
         control: () => {
-          calcInvoicePriceCalculation.call(this)
+          instance.calcInvoicePriceCalculation()
         }
       },
       {
@@ -167,62 +186,10 @@ export function getInvoicePriceCalculationFormOption() {
         prop: 'invoicePriceCalculation',
         type: 'text',
         control: () => {
-          calcGrossProfitLevel1.call(this)
+          instance.calcGrossProfitLevel1()
         }
       }
     ]
   }
   return invoicePriceCalculationFormOption
-}
-
-function calcPurchasedModel() {
-  const fItem = this.currentPurchased
-  if (!fItem) return
-  const { regulationDiscount, guidePrice, financialSubsidy, tradeTypeData } = fItem
-  const { invoicePriceCalculationForm } = this
-  let { tradeType } = invoicePriceCalculationForm
-  tradeType = tradeType || 0
-  invoicePriceCalculationForm.regulationDiscount = regulationDiscount
-  invoicePriceCalculationForm.guidePrice = guidePrice
-  invoicePriceCalculationForm.financialSubsidy = financialSubsidy
-  invoicePriceCalculationForm.tradeInSubsidy = tradeTypeData[tradeType]
-}
-
-function calcDealerLoanProfit(form) {
-  if (!form) return
-  let { customerInterestSubsidy, loanProduct, loanAmount } = form
-  if (!loanProduct || !loanAmount) {
-    form.dealerLoanProfit = ''
-    return
-  }
-  customerInterestSubsidy = customerInterestSubsidy || 0
-  form.dealerLoanProfit = accSub(accMul(loanAmount, loanProduct), customerInterestSubsidy)
-}
-
-function calcOrderTotalGrossProfit() {
-  const form = this.form
-  let { grossProfitLevel1, grossProfitLevel2, grossProfitLevel3 } = form
-  grossProfitLevel1 = grossProfitLevel1 || 0
-  grossProfitLevel2 = grossProfitLevel2 || 0
-  grossProfitLevel3 = grossProfitLevel3 || 0
-  form.orderTotalGrossProfit = accAdd(grossProfitLevel1, grossProfitLevel2, grossProfitLevel3)
-}
-
-function calcInvoicePriceCalculation() {
-  const {
-    regulationDiscount,
-    guidePrice,
-    financialSubsidy,
-    tradeInSubsidy
-  } = this.invoicePriceCalculationForm
-  const invoicePriceCalculation = this.invoicePriceCalculationForm.invoicePriceCalculation = accSub(guidePrice, regulationDiscount, financialSubsidy, tradeInSubsidy)
-  this.form.invoicePriceCalculation = invoicePriceCalculation
-}
-
-function calcGrossProfitLevel1() {
-  const form = this.form
-  const { invoicePriceCalculation } = form
-  if (!this.currentPurchased) return
-  const { guidePrice } = this.currentPurchased
-  form.grossProfitLevel1 = accSub(invoicePriceCalculation, guidePrice)
 }

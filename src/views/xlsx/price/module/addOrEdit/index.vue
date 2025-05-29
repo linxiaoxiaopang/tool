@@ -14,7 +14,7 @@
 
 <script>
 import { getFormOption, getInvoicePriceCalculationFormOption } from './const'
-import { purchasedModelDic } from './const'
+import { purchasedModelDic } from './utils'
 import { cloneDeep } from 'lodash'
 
 export default {
@@ -29,8 +29,10 @@ export default {
 
   data() {
     return {
-      form: {},
       dic: purchasedModelDic,
+      form: {
+        insuranceGift: 0
+      },
       invoicePriceCalculationForm: {
         financialSubsidy: 0,
         invoicePriceCalculation: 0
