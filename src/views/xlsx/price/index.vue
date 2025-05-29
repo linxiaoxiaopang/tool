@@ -1,13 +1,21 @@
 <template>
-  <pageContainer class='flex-column'>
-    <baseTable class='tabs-active-border--primary' :key='key' :option='option' :data='data' v-bind='$attrs'>
+  <pageContainer class="flex-column">
+    <baseTable class="tabs-active-border--primary" :key="key" :option="option" :data="data" v-bind="$attrs">
       <template #menuLeft>
-        <AddOrEdit />
-        <XlsxTable @on-select-file='onSelectMangoMapOrder' class='inline-block ml10' :keepOrigin='true'>
-          <el-button type='primary'> 上传规则</el-button>
+        <AddOrEdit @submit="onsubmit" />
+        <XlsxTable
+          class="inline-block ml10"
+          :analysisAll="true"
+          :keepOrigin="true"
+          @on-map-select-file="onSelectMapData"
+        >
+          <el-button type="primary"> 上传规则</el-button>
         </XlsxTable>
+        <el-button class="ml10" type="primary" @click="onExport"> 导出结果</el-button>
+      </template>
 
-        <el-button class='ml10' type='primary' @click='onExport'> 导出结果</el-button>
+      <template #menu="{row}">
+        <AddOrEdit type="edit" :data="row" />
       </template>
     </baseTable>
   </pageContainer>
@@ -42,7 +50,7 @@ export default {
   data() {
     return {
       column: [],
-      data: [{}],
+      data: [],
       key: getUUID()
     }
   },
@@ -54,13 +62,15 @@ export default {
   },
 
   methods: {
-    async onSelectMangoOrder(excelData) {
+    onSelectMapData(excelData) {
+      debugger
       let { body = [] } = excelData
+
     },
 
-    onSelectMangoMapOrder(excelData) {
-      let { body = [] } = excelData
-
+    onsubmit(form, done) {
+      this.data.push(form)
+      done(true)
     },
 
     onExport() {
@@ -103,4 +113,4 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped></style>
+<style lang="scss" scoped></style>

@@ -21,7 +21,6 @@ export const ORDER_KEYS = {
 }
 
 export const option = {
-  menu: false,
   column: [
     {
       label: '客户',

@@ -1,22 +1,18 @@
 <template>
   <dialogForm
-    v-model="form"
-    customClass="review-dialog-wrapper"
-    :beforeOpen="beforeOpen"
-    @closed="closed"
-    v-bind="option"
+    v-model='form'
+    customClass='review-dialog-wrapper'
+    @closed='closed'
+    v-bind='option'
+    v-on='$listeners'
   >
-    <template #invoicePriceCalculation>
-      <baseForm v-model="form.invoicePriceCalculationForm" :option='invoicePriceCalculationFormOption'>
-
-      </baseForm>
-    </template>
-
   </dialogForm>
 </template>
 
 <script>
-import { formOption, invoicePriceCalculationFormOption } from './const'
+import { getFormOption } from './const'
+import { cloneDeep } from 'lodash'
+
 export default {
   props: {
     type: {
@@ -30,54 +26,46 @@ export default {
   data() {
     return {
       form: {
-        invoicePriceCalculationForm: {
-          tradeInSubsidy: 0
-        }
+        insuranceGift: 0,
+        financialSubsidy: 0,
+        invoicePriceCalculation: 0
       },
-      invoicePriceCalculationFormOption,
-      selectionData: []
+      formOption: getFormOption.call(this)
     }
   },
 
   computed: {
-    option({type}) {
+    option({ type, formOption }) {
       const list = {
-         add: {
-           title: '新增',
-           option: formOption
-         }
+        add: {
+          title: '新增',
+          btnType: 'primary',
+          btnSize: 'medium',
+          option: formOption
+        },
+        edit: {
+          title: '编辑',
+          btnType: 'text',
+          option: formOption,
+          beforeOpen: () => {
+            this.form = cloneDeep(this.data)
+            return true
+          }
+        }
       }
-
-      return  list[type]
+      return list[type]
     }
   },
 
-  watch: {
-    // 'form.loanProduct': {
-    //   handler(newVal) {
-    //     if(!newVal) newVal = 0
-    //    this.form.dealerLoanProfit = this.form.loanAmount * newVal
-    //   },
-    //   immediate: true
-    // }
-  },
-
   methods: {
-    async beforeOpen() {
-      const { updateContent, teamReviewRemake, adminReviewRemake  } = this.data?.artworkChangeRecordList?.[0] || {}
-      this.form.updateContent = updateContent
-      this.form.teamReviewRemake =  adminReviewRemake || teamReviewRemake
-      return true
-    },
-
     closed() {
-      Object.assign(this.$data, this.$options.data())
+      Object.assign(this, this.$options.data.call(this))
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang='scss'>
 .review-dialog-wrapper {
   .form-container {
     margin-top: 32px;
