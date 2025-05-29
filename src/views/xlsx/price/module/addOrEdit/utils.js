@@ -36,10 +36,6 @@ export class CalculationCar {
     return this.vmInstance.form
   }
 
-  get invoicePriceCalculationForm() {
-    return this.vmInstance.invoicePriceCalculationForm
-  }
-
   get currentPurchased() {
     const { purchasedModel } = this.form
     return this.dic.find(item => item.value === purchasedModel)
@@ -48,12 +44,12 @@ export class CalculationCar {
   calcPurchasedModel() {
     if (!this.currentPurchased) return
     const { regulationDiscount, guidePrice, tradeTypeData } = this.currentPurchased
-    const { invoicePriceCalculationForm } = this
-    let { tradeType } = invoicePriceCalculationForm
+    const { form } = this
+    let { tradeType } = form
     tradeType = tradeType || 0
-    invoicePriceCalculationForm.regulationDiscount = regulationDiscount
-    invoicePriceCalculationForm.guidePrice = guidePrice
-    invoicePriceCalculationForm.tradeInSubsidy = tradeTypeData[tradeType]
+    form.regulationDiscount = regulationDiscount
+    form.guidePrice = guidePrice
+    form.tradeInSubsidy = tradeTypeData[tradeType]
     this.calcGrossProfitLevel2()
   }
 
@@ -64,15 +60,15 @@ export class CalculationCar {
   }
 
   calcTradeInSubsidy() {
-    const { invoicePriceCalculationForm } = this
-    let { tradeType } = invoicePriceCalculationForm
+    const { form } = this
+    let { tradeType } = form
     tradeType = tradeType || 0
     const tradeTypeData = this.currentPurchased?.tradeTypeData
     if (!tradeTypeData) {
-      invoicePriceCalculationForm.tradeInSubsidy = 0
+      form.tradeInSubsidy = 0
       return
     }
-    invoicePriceCalculationForm.tradeInSubsidy = tradeTypeData[tradeType]
+    form.tradeInSubsidy = tradeTypeData[tradeType]
   }
 
   calcDealerLoanProfit() {
@@ -86,9 +82,9 @@ export class CalculationCar {
   }
 
   calcFinancialSubsidy() {
-    const { form, invoicePriceCalculationForm } = this
+    const { form } = this
     const { dealerLoanProfit } = form
-    invoicePriceCalculationForm.financialSubsidy = dealerLoanProfit
+    form.financialSubsidy = dealerLoanProfit
   }
 
   calcInvoicePriceCalculation() {
@@ -97,8 +93,8 @@ export class CalculationCar {
       guidePrice,
       financialSubsidy,
       tradeInSubsidy
-    } = this.invoicePriceCalculationForm
-    const invoicePriceCalculation = this.invoicePriceCalculationForm.invoicePriceCalculation = accSub(guidePrice, regulationDiscount, financialSubsidy, tradeInSubsidy)
+    } = this.form
+    const invoicePriceCalculation = this.form.invoicePriceCalculation = accSub(guidePrice, regulationDiscount, financialSubsidy, tradeInSubsidy)
     this.form.invoicePriceCalculation = invoicePriceCalculation
   }
 
@@ -112,7 +108,7 @@ export class CalculationCar {
 
   calcGrossProfitLevel2() {
     const form = this.form
-    const { tradeInSubsidy, regulationDiscount } = this.invoicePriceCalculationForm
+    const { tradeInSubsidy, regulationDiscount } = this.form
     form.grossProfitLevel2 = accAdd(tradeInSubsidy, regulationDiscount)
   }
 

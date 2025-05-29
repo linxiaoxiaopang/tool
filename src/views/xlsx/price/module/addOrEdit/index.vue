@@ -6,15 +6,11 @@
     v-bind='option'
     v-on='$listeners'
   >
-    <template #invoicePriceCalculation>
-      <baseForm v-model='invoicePriceCalculationForm' :option='invoicePriceCalculationFormOption' />
-    </template>
   </dialogForm>
 </template>
 
 <script>
-import { getFormOption, getInvoicePriceCalculationFormOption } from './const'
-import { purchasedModelDic } from './utils'
+import { getFormOption } from './const'
 import { cloneDeep } from 'lodash'
 
 export default {
@@ -29,16 +25,12 @@ export default {
 
   data() {
     return {
-      dic: purchasedModelDic,
       form: {
-        insuranceGift: 0
-      },
-      invoicePriceCalculationForm: {
+        insuranceGift: 0,
         financialSubsidy: 0,
         invoicePriceCalculation: 0
       },
-      formOption: getFormOption.call(this),
-      invoicePriceCalculationFormOption: getInvoicePriceCalculationFormOption.call(this)
+      formOption: getFormOption.call(this)
     }
   },
 
@@ -62,11 +54,6 @@ export default {
         }
       }
       return list[type]
-    },
-
-    currentPurchased({ form, dic }) {
-      const { purchasedModel } = form
-      return dic.find(item => item.value === purchasedModel)
     }
   },
 
