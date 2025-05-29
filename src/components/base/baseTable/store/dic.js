@@ -6,7 +6,7 @@ import { GET_REQUEST_PREFIX, getXMenuType } from '@/utils/constant/menuConst'
 import { getToken } from '@/utils/auth'
 import { REQUEST_ALL_DATA } from '@/utils/constant/requestConst'
 import { validData } from '@/components/avue/utils/util'
-import { isArray, isPlainObject, merge, flattenDeep, chain, flatMap, trim } from 'lodash'
+import { isArray, isPlainObject, isFunction, merge, flattenDeep, chain, flatMap, trim } from 'lodash'
 import { getDicName } from '@/components/avue/core/dic'
 
 function getDic(option) {
@@ -50,9 +50,9 @@ const dic = {
     SET_DIC_DATA: (state, { prop, dicData } = {}) => {
       if (!prop || !state[prop]) return
       state[prop].dicData = dicData
-      
+
       let { partParams, partData, allLabel } = state[prop]
-      
+
       if (partParams && partData && Array.isArray(dicData)) {
         let partKeys = Object.keys(partParams)
         partKeys.forEach((partKey) => {
@@ -71,7 +71,7 @@ const dic = {
       if (allLabel) unshiftAllLabel(dicData, allLabel)
     }
   },
-  
+
   actions: {
     MultipleGetDic({ dispatch }, props = []) {
       return promiseAll(props.map(async (prop) => await dispatch('GetDic', prop)))
@@ -88,7 +88,7 @@ const dic = {
           })
         )
         if (validatenull(res1?.detail[0]?.id)) return resolve([])
-        
+
         let res2 = await awaitResolve(
           getDic({
             url: '/systemService/dictionaryItem/list',
@@ -105,15 +105,15 @@ const dic = {
     GetDic({ state, commit, dispatch }, prop) {
       let dic = state[prop]
       if (!dic) return []
-      
+
       if (dic.dicData) return dic.dicData
       // 表示正在请求，保存resolve，在请求结束后，统一返回数据
       if (dic.loading && dic.resolves) return new Promise(resolve => dic.resolves.push(resolve))
-      
+
       return new Promise(async (resolve) => {
         if (!dic.resolves) dic.resolves = []
         dic.loading = true
-        
+
         let dicData = []
         let curRequest
         if (dic.url) {
@@ -124,21 +124,21 @@ const dic = {
           curRequest = dic.lastRequest = dispatch('GetDict', dic.dictType)
           dicData = await curRequest
         }
-        
+
         if (dic.handleDicData) dicData = dic.handleDicData(dicData || []) || []
         dicData = dicToCommon(dicData, dic.props)
-        
+
         // 多次请求时，返回最后一次请求数据
         if (curRequest !== dic.lastRequest) {
           // 比最后一次请求晚返回导致dic.resolves已经变为null，但是此时的dic.dicData是最新的
           return dic.resolves ? dic.resolves.push(resolve) : resolve(dic.dicData)
         }
-        
+
         // 请求结束，返回请求数据
         dic.resolves.forEach(resolve => resolve(dicData))
         dic.resolves = null
         dic.lastRequest = null
-        
+
         commit('SET_DIC_DATA', { prop, dicData })
         resolve(dicData)
         dic.loading = false
@@ -156,7 +156,7 @@ const dic = {
     ClearDic({ state, commit }, prop) {
       let dic = state[prop]
       if (dic) dic.loading = false
-      
+
       commit('SET_DIC_DATA', {
         prop,
         dicData: null
@@ -165,18 +165,18 @@ const dic = {
     // 刷新字典
     async RefreshDic({ state, dispatch }, prop) {
       await dispatch('ClearDic', prop)
-      
+
       let dic = state[prop]
       if (!dic) return []
       dic.loading = false
-      
+
       return await dispatch('GetDic', prop)
     },
     // 当字典无值时，重新获取字典
     GetDicRetry({ state, dispatch }, prop) {
       let dic = state[prop]
       if (!dic) return []
-      
+
       if (validatenull(dic.dicData)) {
         dispatch('ClearDic', prop)
         return dispatch('GetDic', prop)
@@ -195,7 +195,7 @@ const dic = {
       if (!Array.isArray(column)) return []
       column.forEach((column) => {
         if (!column) return
-        
+
         let dicName = getDicName(column)
         if (state[dicName] && hasDicType.includes(column.type)) {
           if (validatenull(column.dicData) || column.dicOrigin === 'dic') {
@@ -207,10 +207,10 @@ const dic = {
                 if (column.dicPart) {
                   dicData = state[dicName].partData[column.dicPart]
                 }
-                
+
                 // column.dicData = dicData
                 column.dicOrigin = 'dic' // dicData 是通过 HandleOption 设置的
-                
+
                 dic[dicName] = validData(dic[dicName], dicData)
               }
             })
@@ -219,7 +219,7 @@ const dic = {
             column.dicOrigin = 'self'
           }
         }
-        
+
         if (column.dicTypes) {
           for (const key in column.dicTypes) {
             const dicType = column.dicTypes[key]
@@ -228,7 +228,7 @@ const dic = {
               if (dicPart) {
                 dicData = state[dicName].partData[dicPart]
               }
-              
+
               dic[dicName] = dicData
             })
           }
@@ -260,7 +260,7 @@ export function createDic(...args) {
   const dics = args.map(item => ({
     state: item
   }))
-  
+
   if (!window.IS_PRODUCTION) {
     // 获取所有 key 值
     const allKeys = flatMap(args, obj => Object.keys(obj))
@@ -271,7 +271,7 @@ export function createDic(...args) {
       .keys()
       .value()
     duplicateKeys.length && console.error(`dic中有重复的key（相同key会导致覆盖）：${duplicateKeys.join('、')}`)
-    
+
     // 获取所有属性值
     const allValues = flatMap(args, obj => Object.values(obj))
     // 获取重复属性值
@@ -285,7 +285,7 @@ export function createDic(...args) {
       .value()
     duplicateValues.length && console.error(`dic中有重复的url：${duplicateValues.join('、')}`)
   }
-  
+
   return merge(dic, ...dics)
 }
 

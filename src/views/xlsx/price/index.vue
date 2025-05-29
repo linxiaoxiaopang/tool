@@ -5,6 +5,7 @@
         <AddOrEdit @submit="onsubmit" />
         <XlsxTable
           class="inline-block ml10"
+          :isMergeCell="true"
           :analysisAll="true"
           :keepOrigin="true"
           @on-map-select-file="onSelectMapData"
@@ -26,9 +27,10 @@ import baseTableChild from '@/components/base/baseTable/mixins/baseTableChild'
 import getBaseTableDataMixin from '@/components/base/baseTable/mixins/getBaseTableDataMixin'
 import XlsxTable from '@/components/xlsxTable.vue'
 import AddOrEdit from './module/addOrEdit'
-import { getUUID } from '@/utils'
+import { changeArrKey, getUUID } from '@/utils'
 import * as XLSX from 'xlsx'
-import { option, ORDER_KEYS } from './const'
+import { option, ORDER_KEYS, sheetDic, updateSheetData } from './const'
+import { dicToCommon } from '@/components/base/baseTable/store/dic'
 
 export default {
   components: {
@@ -63,9 +65,13 @@ export default {
 
   methods: {
     onSelectMapData(excelData) {
-      debugger
-      let { body = [] } = excelData
-
+      const sheetData = {}
+      for (let item of sheetDic) {
+        const { value: prop, label: sheetName, keyMap, handleData } = item
+        const { body } = excelData[sheetName]
+        sheetData[prop] = handleData(changeArrKey(body, keyMap))
+      }
+      updateSheetData(sheetData)
     },
 
     onsubmit(form, done) {

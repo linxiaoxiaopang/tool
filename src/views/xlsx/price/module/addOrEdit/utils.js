@@ -1,4 +1,5 @@
 import { accAdd, accMul, accSub } from '@/utils'
+import { sheetData } from '../../const'
 
 export const purchasedModelDic = [
   {
@@ -27,29 +28,51 @@ export const purchasedModelDic = [
 
 export class CalculationCar {
   constructor(option = {}) {
-    const { vmInstance, dic = purchasedModelDic } = option
-    this.dic = dic
+    const { vmInstance } = option
     this.vmInstance = vmInstance
+    this.sheetData = sheetData
   }
 
   get form() {
     return this.vmInstance.form
   }
 
+  // get sheetData() {
+  //   return sheetData
+  // }
+
+  get loanDic() {
+    return this.sheetData.loan
+  }
+
+  get replacementDic() {
+    return this.sheetData.replacement
+  }
+
+  get profitSystemDic() {
+    debugger
+    return this.sheetData.profitSystem
+  }
+
   get currentPurchased() {
     const { purchasedModel } = this.form
-    return this.dic.find(item => item.value === purchasedModel)
+    return this.profitSystemDic.find(item => item.value === purchasedModel)
+  }
+
+  get currentReplacement() {
+    return this.replacementDic.find(item => item.vehicleSeries == this.currentPurchased.vehicleSeries)
   }
 
   calcPurchasedModel() {
     if (!this.currentPurchased) return
-    const { regulationDiscount, guidePrice, tradeTypeData } = this.currentPurchased
+    const { regulationDiscount, guidePrice } = this.currentPurchased
+    const { currentReplacement } = this
     const { form } = this
     let { tradeType } = form
     tradeType = tradeType || 0
     form.regulationDiscount = regulationDiscount
     form.guidePrice = guidePrice
-    form.tradeInSubsidy = tradeTypeData[tradeType]
+    form.tradeInSubsidy = currentReplacement[tradeType] || 0
     this.calcGrossProfitLevel2()
   }
 
@@ -60,15 +83,14 @@ export class CalculationCar {
   }
 
   calcTradeInSubsidy() {
-    const { form } = this
+    const { form, currentReplacement } = this
     let { tradeType } = form
     tradeType = tradeType || 0
-    const tradeTypeData = this.currentPurchased?.tradeTypeData
-    if (!tradeTypeData) {
+    if (!currentReplacement) {
       form.tradeInSubsidy = 0
       return
     }
-    form.tradeInSubsidy = tradeTypeData[tradeType]
+    form.tradeInSubsidy = currentReplacement[tradeType]
   }
 
   calcDealerLoanProfit() {

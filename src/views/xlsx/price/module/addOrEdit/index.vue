@@ -30,7 +30,9 @@ export default {
         financialSubsidy: 0,
         invoicePriceCalculation: 0
       },
-      formOption: getFormOption.call(this)
+      formOption: {
+        column:[]
+      }
     }
   },
 
@@ -55,6 +57,10 @@ export default {
       }
       return list[type]
     }
+  },
+
+  created() {
+    this.formOption = getFormOption.call(this)
   },
 
   methods: {

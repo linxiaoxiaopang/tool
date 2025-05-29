@@ -20,7 +20,8 @@ export function getFormOption() {
         label: '购买车型',
         prop: 'purchasedModel',
         type: 'select',
-        dicData: instance.dic,
+        dicData: instance.profitSystemDic,
+        // dicData: [],
         control: () => {
           instance.calcPurchasedModel()
         }
@@ -29,10 +30,7 @@ export function getFormOption() {
         label: '贷款产品',
         prop: 'loanProduct',
         type: 'select',
-        dicData: [{
-          label: '迪链（60期）14%',
-          value: '0.14'
-        }],
+        dicData: instance.loanDic,
         control: () => {
           instance.calcDealerLoanProfit()
         }
@@ -97,15 +95,15 @@ export function getFormOption() {
         dicData: [
           {
             label: '无',
-            value: 0
+            value: 'none'
           },
           {
             label: '普通置换',
-            value: 1
+            value: 'noBYD'
           },
           {
             label: '比亚迪置换',
-            value: 2
+            value: 'BYD'
           }
         ]
       },

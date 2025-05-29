@@ -1,3 +1,94 @@
+export const loanKeyMap = {
+  bank: '银行',
+  rate: '利率'
+}
+
+export const replacementKeyMap = {
+  vehicleSeries: '车系',
+  BYD: '比亚迪',
+  noBYD: '非比亚迪'
+}
+
+export const terminalDiscountKeyMap = {
+  vehicleSeries: '车系',
+  vehicleModel: '车型',
+  discount: '折让额度'
+}
+
+export const profitSystemKeyMap = {
+  vehicleSeries: '车系',
+  vehicleModel: '车型',
+  suggestedRetailPrice: '建议零售价',
+  deliveryPrice: '提车价',
+  priceDifference: '提车差价',
+  monthlyDeliveryConcession: '月度提车折让',
+  advertisingSupportConcession: '广告支持折让',
+  sincereServiceAssessmentConcession: '精诚服务考核折让',
+  wes: '智享服务体验(WES)折让'
+}
+
+export const sheetDic = [
+  {
+    label: '贷款',
+    value: 'loan',
+
+    handleData(data) {
+      return data.map(item => {
+        const { bank, rate } = item
+        item.label = `${bank}(${rate})`
+        item.value = rate
+        return item
+      })
+    },
+    keyMap: loanKeyMap
+  },
+  {
+    label: '置换',
+    value: 'replacement',
+    handleData(data) {
+      return data
+    },
+    keyMap: replacementKeyMap
+  },
+  {
+    label: '终端折让',
+    value: 'terminalDiscount',
+    handleData(data) {
+      return data.map(item => {
+        const { vehicleSeries } = item
+        item.label = vehicleSeries
+        item.value = vehicleSeries
+        return item
+      })
+    },
+    keyMap: terminalDiscountKeyMap
+  },
+  {
+    label: '利润体系',
+    value: 'profitSystem',
+    handleData(data) {
+      return data.map(item => {
+        const { vehicleSeries, vehicleModel } = item
+        item.label = `${vehicleSeries} ${vehicleModel}`
+        item.value = `${vehicleSeries}|${vehicleModel}`
+        return item
+      })
+    },
+    keyMap: profitSystemKeyMap
+  }
+]
+
+export let sheetData = sheetDic.reduce((prev, cur) => {
+  prev[cur.value] = []
+  return prev
+}, {})
+
+export function updateSheetData(data) {
+  Object.keys(sheetData).map(key => {
+    sheetData[key] = data[key]
+  })
+}
+
 export const ORDER_KEYS = {
   sku: 'SKU',
   consigneeCountryCode: '国家',
