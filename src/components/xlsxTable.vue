@@ -6,10 +6,10 @@
       </slot>
     </div>
     <input
+      class="c-hide"
       :ref="uploadInputId"
       type="file"
       :accept="accept"
-      class="c-hide"
       @change="handkeFileChange"
     />
   </div>
@@ -17,20 +17,11 @@
 
 <script>
 import * as XLSX from 'xlsx'
-import { fileConvertToWorkbook } from '@/utils'
+import { isArray } from 'lodash'
+
 export default {
   name: 'vue-xlsx-table',
-  data() {
-    return {
-      rawFile: null,
-      workbook: null,
-      tableData: {
-        header: [],
-        body: []
-      },
-      uploadInputId: new Date().getUTCMilliseconds()
-    }
-  },
+
   props: {
     options: {
       type: Object,
@@ -48,9 +39,26 @@ export default {
       type: Number,
       default: Infinity
     },
+    sheetName: [String, Array],
     isMergeCell: Boolean,
-    keepOrigin: Boolean
+    keepOrigin: Boolean,
+    analysisAll: Boolean
   },
+
+  data() {
+    return {
+      rawFile: null,
+      workbook: null,
+      tableData: {
+        header: [],
+        body: []
+      },
+      mapSheetTableData: {},
+      uploadInputId: new Date().getUTCMilliseconds(),
+      activeSheetName: ''
+    }
+  },
+
   computed: {
     rABS() {
       const DEFAULT_OPTION = {
@@ -58,15 +66,20 @@ export default {
       }
       const xlsxOptions = Object.assign(DEFAULT_OPTION, this.options)
       return xlsxOptions.rABS
+    },
+
+    finalSheetNames({ workbook, sheetName, analysisAll }) {
+      if (analysisAll) return workbook.SheetNames
+      if (!sheetName) sheetName = workbook.SheetNames[0]
+      return isArray(sheetName) ? sheetName : [sheetName]
     }
   },
+
   methods: {
-    handkeFileChange(e) {
-      if (this.rawFile !== null) {
-        return
-      }
+    async handkeFileChange(e) {
+      if (this.rawFile !== null) return
       let rawFile = this.rawFile = e.target.files[0]
-      if(!this.checkFile(rawFile)) return
+      if (!this.checkFile(rawFile)) return
       const loading = this.$loading({
         lock: true,
         text: '上传中...',
@@ -77,101 +90,85 @@ export default {
         this.$emit('input-file', rawFile)
         this.$emit('getFileName', rawFile.name)
       })
-
       let fileType = rawFile.name.split('.').pop()
-      // console.log(rawFile, fileType)
-      console.log('accept', this.accept)
-      if (['csv', 'tsv'].includes(fileType)) {
-        this.handleCsvFile(loading)
-      } else {
-        if(!this.isMergeCell) {
-          this.handleXlsxFile(loading)
-        } else {
-          this.handleXlsxMergeCellFile(loading)
+      try {
+        this.mapSheetTableData = {}
+        this.activeSheetName = ''
+        this.workbook = await this.fileConvertToWorkbook(rawFile)
+        for (let sheetName of this.finalSheetNames) {
+          this.activeSheetName = sheetName
+          if (['csv', 'tsv'].includes(fileType)) {
+            await this.handleCsvFile()
+          } else if (this.isMergeCell) {
+            await this.handleXlsxMergeCellFile()
+          } else {
+            await this.handleXlsxFile()
+          }
+          this.mapSheetTableData[this.activeSheetName] = { ...this.tableData }
         }
+        this.$emit('on-map-select-file', this.mapSheetTableData)
+      } catch (err) {
+        throw err
+      } finally {
+        loading.close()
       }
     },
+
     onDrop(e) {
       this.handkeFileChange({ target: { files: e.dataTransfer.files } })
     },
-
     checkFile(rawFile) {
       return this.checkAccept(rawFile) && this.checkSize(rawFile)
     },
     checkSize(rawFile) {
-      if(rawFile.size <= this.limit) {
+      if (rawFile.size <= this.limit) {
         return true
       }
       this.$message.warning(`请上传不超过${this.limit / 1024 / 1024}M文件`)
       return false
     },
-    checkAccept (rawFile) {
+    checkAccept(rawFile) {
       let fileType = rawFile.name.split('.').pop()
-      if(this.accept.indexOf(fileType) >=0 ) {
+      if (this.accept.indexOf(fileType) >= 0) {
         return true
       }
       this.$message.warning(`请上传${this.accept}文件`)
       return false
     },
-    async handleCsvFile(loading) {
-      try {
-        const workbook = await fileConvertToWorkbook(this.rawFile)
-        const sheet = workbook.Sheets[workbook.SheetNames[0]]
-        this.formatNumToString(sheet)
-        this.update_sheet_range(workbook.Sheets[workbook.SheetNames[0]])
-        let xlsxArr = XLSX.utils.sheet_to_json(
-          workbook.Sheets[workbook.SheetNames[0]]
-        )
-        this.workbook = workbook
-
-        let tableData = this.xlsxArrToTableArr(xlsxArr)
-        this.initTable(tableData)
-      } catch (e) {}
-      loading.close()
+    getSheet() {
+      const workbook = this.workbook
+      let sheet = null
+      const sheetName = this.activeSheetName || workbook.SheetNames[0]
+      sheet = workbook.Sheets[sheetName]
+      if (!sheet) {
+        sheet = workbook.Sheets.find(item => item == sheetName)
+      }
+      return sheet
     },
-    handleXlsxFile(loading) {
-      this.fileConvertToWorkbook(this.rawFile)
-        .then((workbook) => {
-          const sheet = workbook.Sheets[workbook.SheetNames[0]]
-          this.formatNumToString(sheet)
-          this.update_sheet_range(workbook.Sheets[workbook.SheetNames[0]])
-          let xlsxArr = XLSX.utils.sheet_to_json(
-            workbook.Sheets[workbook.SheetNames[0]]
-          )
-          this.workbook = workbook
-          loading.close()
-          this.initTable(this.xlsxArrToTableArr(xlsxArr))
-        })
-        .catch((err) => {
-          this.$emit('on-select-file', false)
-          loading.close()
-          console.error(err)
-        })
+    async handleCsvFile() {
+      const sheet = this.getSheet()
+      this.formatNumToString(sheet)
+      this.update_sheet_range(sheet)
+      let xlsxArr = XLSX.utils.sheet_to_json(sheet)
+      let tableData = this.xlsxArrToTableArr(xlsxArr)
+      this.initTable(tableData)
     },
-    handleXlsxMergeCellFile(loading) {
-      this.fileConvertToWorkbook(this.rawFile)
-        .then((workbook) => {
-          const sheet = workbook.Sheets[workbook.SheetNames[0]]
-          this.dealMergeCol(sheet)
-          this.formatNumToString(sheet)
-          this.update_sheet_range(sheet)
-          let xlsxArr = XLSX.utils.sheet_to_json(
-            sheet
-          )
-          this.workbook = workbook
-          loading.close()
-          this.initTable(this.xlsxArrToTableArr(xlsxArr))
-        })
-        .catch((err) => {
-          this.$emit('on-select-file', false)
-          loading.close()
-          console.error(err)
-        })
+    async handleXlsxFile() {
+      const sheet = this.getSheet()
+      this.formatNumToString(sheet)
+      this.update_sheet_range(sheet)
+      let xlsxArr = XLSX.utils.sheet_to_json(sheet)
+      this.initTable(this.xlsxArrToTableArr(xlsxArr))
+    },
+    handleXlsxMergeCellFile() {
+      const sheet = this.getSheet()
+      this.dealMergeCol(sheet)
+      this.handleXlsxFile()
     },
     dealMergeCol(worksheet) {
       // 获取合并单元格的范围
       const merges = worksheet['!merges']
-      if(!merges) return
+      if (!merges) return
       // 遍历合并单元格
       merges.forEach(merge => {
         const startCell = merge.s
@@ -290,7 +287,7 @@ export default {
             typeof item[tableHeader[i]] === 'number' ||
             typeof item[tableHeader[i]] === 'string'
           ) {
-            if(this.keepOrigin) {
+            if (this.keepOrigin) {
               rowItem[tableHeader[i]] =
                 item[tableHeader[i]]
                   .toString()
@@ -375,12 +372,16 @@ export default {
       return nHeader
     },
     update_sheet_range(ws) {
-      var range = {s:{r:Infinity, c:Infinity},e:{r:0,c:0}};
-      Object.keys(ws).filter(function(x) { return x.charAt(0) != "!"; }).map(XLSX.utils.decode_cell).forEach(function(x) {
-        range.s.c = Math.min(range.s.c, x.c); range.s.r = Math.min(range.s.r, x.r);
-        range.e.c = Math.max(range.e.c, x.c); range.e.r = Math.max(range.e.r, x.r);
-      });
-      ws['!ref'] = XLSX.utils.encode_range(range);
+      var range = { s: { r: Infinity, c: Infinity }, e: { r: 0, c: 0 } }
+      Object.keys(ws).filter(function(x) {
+        return x.charAt(0) != '!'
+      }).map(XLSX.utils.decode_cell).forEach(function(x) {
+        range.s.c = Math.min(range.s.c, x.c)
+        range.s.r = Math.min(range.s.r, x.r)
+        range.e.c = Math.max(range.e.c, x.c)
+        range.e.r = Math.max(range.e.r, x.r)
+      })
+      ws['!ref'] = XLSX.utils.encode_range(range)
     }
   }
 }
