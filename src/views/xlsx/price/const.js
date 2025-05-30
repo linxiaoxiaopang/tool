@@ -71,12 +71,26 @@ export const sheetDic = [
     label: '终端折让',
     value: 'terminalDiscount',
     handleData(data) {
-      return data.map(item => {
-        const { vehicleSeries } = item
+      const tmpData = []
+      data.map(item => {
+        const { vehicleSeries, vehicleModel } = item
         item.label = vehicleSeries
         item.value = vehicleSeries
-        return item
+        if (vehicleModel == '全系') {
+          item.vehicleModel = ''
+          tmpData.push(item)
+          return
+        }
+
+        const splitData = vehicleModel.split(/、/).map(sItem => sItem.trim())
+        splitData.map(sItem => {
+          tmpData.push({
+            ...item,
+            vehicleModel: sItem
+          })
+        })
       })
+      return tmpData
     },
     keyMap: terminalDiscountKeyMap
   },

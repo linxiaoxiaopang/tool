@@ -41,7 +41,21 @@ export class CalculationCar {
   }
 
   get currentTerminalDiscount() {
-    return this.terminalDiscountDic.find(item => item.vehicleSeries == this.currentPurchased?.vehicleSeries)
+    const fItem = this.terminalDiscountDic.find(item => {
+      const isSameVehicleSeries = item.vehicleSeries == this.currentPurchased?.vehicleSeries
+      if (!isSameVehicleSeries) return false
+      if (!item.vehicleModel) return true
+      return item.vehicleModel == this.currentPurchased?.vehicleModel
+    })
+    if (fItem) return fItem
+    if (!this.currentPurchased) return null
+    return {
+      label: this.currentPurchased.vehicleSeries,
+      value: this.currentPurchased.vehicleSeries,
+      vehicleSeries: this.currentPurchased.vehicleSeries,
+      vehicleModel: this.currentPurchased.vehicleModel,
+      regulationDiscount: '0'
+    }
   }
 
   calcPurchasedModel() {
