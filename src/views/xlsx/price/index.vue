@@ -29,6 +29,7 @@ import XlsxTable from '@/components/xlsxTable.vue'
 import AddOrEdit from './module/addOrEdit'
 import { changeArrKey, getUUID } from '@/utils'
 import { option, sheetDic, updateSheetData } from './const'
+import { instanceCacheSheet } from './utils'
 
 export default {
   components: {
@@ -69,6 +70,7 @@ export default {
         const { body } = excelData[sheetName]
         sheetData[prop] = handleData(changeArrKey(body, keyMap))
       }
+      instanceCacheSheet.update(sheetData)
       updateSheetData(sheetData)
     },
 

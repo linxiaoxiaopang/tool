@@ -1,3 +1,5 @@
+import { instanceCacheSheet } from './utils'
+
 export const loanKeyMap = {
   bank: '银行',
   rate: '利率'
@@ -93,7 +95,7 @@ export const sheetDic = [
   }
 ]
 
-export let sheetData = sheetDic.reduce((prev, cur) => {
+export let sheetData = instanceCacheSheet.get() || sheetDic.reduce((prev, cur) => {
   prev[cur.value] = []
   return prev
 }, {})
