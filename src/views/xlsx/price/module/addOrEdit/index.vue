@@ -1,11 +1,17 @@
 <template>
   <dialogForm
-    v-model='form'
-    customClass='review-dialog-wrapper'
-    @closed='closed'
-    v-bind='option'
-    v-on='$listeners'
+    v-model="form"
+    customClass="review-dialog-wrapper"
+    @closed="closed"
+    v-bind="option"
+    v-on="$listeners"
   >
+    <template #bodyHeader>
+      <div class="user-selected-wrapper" v-if="option.showUserSelected">
+        <avue-crud-input type="text" v-model="selectedContent"></avue-crud-input>
+        <el-button @click="onAnalysis">解析</el-button>
+      </div>
+    </template>
   </dialogForm>
 </template>
 
@@ -25,6 +31,7 @@ export default {
 
   data() {
     return {
+      selectedContent: '',
       form: {
         insuranceGift: 0,
         financialSubsidy: 0,
@@ -40,6 +47,7 @@ export default {
           title: '新增',
           btnType: 'primary',
           btnSize: 'medium',
+          showUserSelected: true,
           width: 1000,
           height: '80vh',
           option: formOption
@@ -47,6 +55,7 @@ export default {
         edit: {
           title: '编辑',
           btnType: 'text',
+          showUserSelected: false,
           height: '80vh',
           width: 1000,
           option: formOption,
@@ -66,6 +75,10 @@ export default {
 
 
   methods: {
+    onAnalysis() {
+
+    },
+
     closed() {
       Object.assign(this, this.$options.data.call(this))
     }
@@ -73,7 +86,7 @@ export default {
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 .review-dialog-wrapper {
   .form-container {
     margin-top: 32px;
