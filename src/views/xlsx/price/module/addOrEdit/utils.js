@@ -1,45 +1,19 @@
 import { accAdd, accMul, accSub } from '@/utils'
 import { sheetData } from '../../const'
 
-export const purchasedModelDic = [
-  {
-    label: '宋DM智驾',
-    value: '宋DM智驾',
-    guidePrice: '145800',
-    tradeTypeData: {
-      0: 0,
-      1: 6000,
-      2: 8000
-    },
-    regulationDiscount: '10000'
-  },
-  {
-    label: '海狮07DM智驾',
-    value: '海狮07智驾',
-    guidePrice: '165800',
-    tradeTypeData: {
-      0: 0,
-      1: 9000,
-      2: 11000
-    },
-    regulationDiscount: '16000'
-  }
-]
-
 export class CalculationCar {
   constructor(option = {}) {
     const { vmInstance } = option
     this.vmInstance = vmInstance
-    this.sheetData = sheetData
   }
 
   get form() {
     return this.vmInstance.form
   }
 
-  // get sheetData() {
-  //   return sheetData
-  // }
+  get sheetData() {
+    return sheetData
+  }
 
   get loanDic() {
     return this.sheetData.loan
@@ -50,8 +24,11 @@ export class CalculationCar {
   }
 
   get profitSystemDic() {
-    debugger
     return this.sheetData.profitSystem
+  }
+
+  get terminalDiscountDic() {
+    return this.sheetData.terminalDiscount
   }
 
   get currentPurchased() {
@@ -60,19 +37,20 @@ export class CalculationCar {
   }
 
   get currentReplacement() {
-    return this.replacementDic.find(item => item.vehicleSeries == this.currentPurchased.vehicleSeries)
+    return this.replacementDic.find(item => item.vehicleSeries == this.currentPurchased?.vehicleSeries)
+  }
+
+  get currentTerminalDiscount() {
+    return this.terminalDiscountDic.find(item => item.vehicleSeries == this.currentPurchased?.vehicleSeries)
   }
 
   calcPurchasedModel() {
     if (!this.currentPurchased) return
-    const { regulationDiscount, guidePrice } = this.currentPurchased
-    const { currentReplacement } = this
+    const { guidePrice } = this.currentPurchased
+    const { regulationDiscount } = this.currentTerminalDiscount
     const { form } = this
-    let { tradeType } = form
-    tradeType = tradeType || 0
     form.regulationDiscount = regulationDiscount
     form.guidePrice = guidePrice
-    form.tradeInSubsidy = currentReplacement[tradeType] || 0
     this.calcGrossProfitLevel2()
   }
 
@@ -85,12 +63,11 @@ export class CalculationCar {
   calcTradeInSubsidy() {
     const { form, currentReplacement } = this
     let { tradeType } = form
-    tradeType = tradeType || 0
     if (!currentReplacement) {
       form.tradeInSubsidy = 0
       return
     }
-    form.tradeInSubsidy = currentReplacement[tradeType]
+    form.tradeInSubsidy = currentReplacement[tradeType] || 0
   }
 
   calcDealerLoanProfit() {
@@ -124,8 +101,16 @@ export class CalculationCar {
     const form = this.form
     const { invoicePriceCalculation } = form
     if (!this.currentPurchased) return
-    const { guidePrice } = this.currentPurchased
-    form.grossProfitLevel1 = accSub(invoicePriceCalculation, guidePrice)
+    const {
+      guidePrice,
+      priceDifference,
+      monthlyDeliveryConcession,
+      advertisingSupportConcession,
+      sincereServiceAssessmentConcession,
+      wes
+    } = this.currentPurchased
+    const deliveryPrice = accSub(invoicePriceCalculation, guidePrice, monthlyDeliveryConcession, advertisingSupportConcession, sincereServiceAssessmentConcession, wes)
+    form.grossProfitLevel1 = accAdd(deliveryPrice, priceDifference)
   }
 
   calcGrossProfitLevel2() {

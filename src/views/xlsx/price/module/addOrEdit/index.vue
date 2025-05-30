@@ -29,9 +29,6 @@ export default {
         insuranceGift: 0,
         financialSubsidy: 0,
         invoicePriceCalculation: 0
-      },
-      formOption: {
-        column:[]
       }
     }
   },
@@ -56,12 +53,13 @@ export default {
         }
       }
       return list[type]
+    },
+
+    formOption() {
+      return getFormOption.call(this)
     }
   },
 
-  created() {
-    this.formOption = getFormOption.call(this)
-  },
 
   methods: {
     closed() {

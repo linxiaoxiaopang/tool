@@ -28,9 +28,7 @@ import getBaseTableDataMixin from '@/components/base/baseTable/mixins/getBaseTab
 import XlsxTable from '@/components/xlsxTable.vue'
 import AddOrEdit from './module/addOrEdit'
 import { changeArrKey, getUUID } from '@/utils'
-import * as XLSX from 'xlsx'
-import { option, ORDER_KEYS, sheetDic, updateSheetData } from './const'
-import { dicToCommon } from '@/components/base/baseTable/store/dic'
+import { option, sheetDic, updateSheetData } from './const'
 
 export default {
   components: {
@@ -84,31 +82,6 @@ export default {
         this.$message.error('数据为空，无法导出。')
         return
       }
-      const header = Object.keys(this.data[0])
-      this.exportJsonToExcel({ header, data: this.data })
-    },
-
-    exportJsonToExcel() {
-      // 示例JSON数据
-      const jsonData = this.data
-      const props = Object.keys(ORDER_KEYS)
-      const data = jsonData.map((item) => {
-        const tmpObj = {}
-        props.map((prop) => {
-          tmpObj[ORDER_KEYS[prop]] = item[prop]
-        })
-        return tmpObj
-      })
-
-      // 创建工作表
-      const ws = XLSX.utils.json_to_sheet(data)
-
-      // 创建工作簿并添加工作表
-      const wb = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(wb, ws, '用户数据')
-
-      // 导出为Excel文件
-      XLSX.writeFile(wb, `${this.getFormattedDate()}价格.xlsx`)
     },
 
     getFormattedDate() {

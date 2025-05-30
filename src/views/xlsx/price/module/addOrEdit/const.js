@@ -1,4 +1,5 @@
 import { CalculationCar } from './utils'
+import { tradeTypeDic } from '@/views/xlsx/price/const'
 
 export function getFormOption() {
   const instance = new CalculationCar({
@@ -92,25 +93,13 @@ export function getFormOption() {
           instance.calcTradeInSubsidy()
         },
         value: 0,
-        dicData: [
-          {
-            label: '无',
-            value: 'none'
-          },
-          {
-            label: '普通置换',
-            value: 'noBYD'
-          },
-          {
-            label: '比亚迪置换',
-            value: 'BYD'
-          }
-        ]
+        dicData: tradeTypeDic
       },
       {
         label: '置换补贴',
         prop: 'tradeInSubsidy',
         type: 'text',
+        value: 0,
         control: () => {
           instance.calcInvoicePriceCalculation()
         }
