@@ -82,8 +82,8 @@ export class CalculationCar {
 
   calcFinancialSubsidy() {
     const { form } = this
-    const { dealerLoanProfit } = form
-    form.financialSubsidy = dealerLoanProfit
+    const { customerInterestSubsidy } = form
+    form.financialSubsidy = customerInterestSubsidy
   }
 
   calcInvoicePriceCalculation() {

@@ -8,16 +8,18 @@
   >
     <template #bodyHeader>
       <div class="user-selected-wrapper" v-if="option.showUserSelected">
-        <avue-crud-input type="text" v-model="selectedContent"></avue-crud-input>
-        <el-button @click="onAnalysis">解析</el-button>
+        <avue-crud-input type="textarea" v-model="selectedContent" class="mr24"></avue-crud-input>
+        <el-button type="primary" @click="onAnalysis">解析</el-button>
       </div>
     </template>
   </dialogForm>
 </template>
 
 <script>
-import { getFormOption } from './const'
+import { getFormOption, SELECTED_KEY_MAP } from './const'
 import { cloneDeep } from 'lodash'
+import { changeArrKey } from '@/utils'
+import { CalculationCar } from '@/views/xlsx/price/module/addOrEdit/utils'
 
 export default {
   props: {
@@ -68,6 +70,12 @@ export default {
       return list[type]
     },
 
+    calculationCarInstance() {
+      return new CalculationCar({
+        vmInstance: this
+      })
+    },
+
     formOption() {
       return getFormOption.call(this)
     }
@@ -75,8 +83,72 @@ export default {
 
 
   methods: {
-    onAnalysis() {
+    findPurchasedModel(value) {
+      let searchValue = value
+      const profitSystemDic = this.calculationCarInstance.profitSystemDic
+      let fItem = profitSystemDic.find(item => item.value == value)
+      searchValue = fItem?.value || ''
+      if (searchValue) return searchValue
+      fItem = profitSystemDic.find(item => item.value.indexOf(value) >= 0)
+      searchValue = fItem?.value || ''
+      if (searchValue) return searchValue
+      fItem = profitSystemDic.find(item => {
+        let itemValue = item.value
+        const splitValue = value.split('')
+        for (let sItem of splitValue) {
+          const fIndex = itemValue.indexOf(sItem)
+          if (fIndex < 0) return
+          itemValue = itemValue.substr(fIndex + 1)
+        }
+        return true
+      })
+      searchValue = fItem?.value || ''
+      return searchValue
+    },
 
+    findTradeType(value) {
+      if (!value) return '0'
+      const currentReplacement = this.calculationCarInstance.currentReplacement
+      if (!currentReplacement) return '0'
+      const keys = Object.keys(currentReplacement)
+      for (let key of keys) {
+        const itemValue = currentReplacement[key]
+        if (value == itemValue) {
+          return key
+        }
+      }
+      return '0'
+    },
+
+    onAnalysis() {
+      const selectedContent = this.selectedContent
+      if (!selectedContent) return
+      const splitLineData = selectedContent.split('\n')
+      const splitData = {}
+      splitLineData.map(item => {
+        const [keysStr, valuesStr] = item.split(/:|：/)
+        const keys = keysStr.split('/')
+        const values = valuesStr.split('/')
+        keys.map((key, index) => {
+          splitData[key] = values[index]
+        })
+      })
+      const obj = changeArrKey([splitData], SELECTED_KEY_MAP)[0]
+      for (let key in obj) {
+        let value = obj[key]
+        if (key === 'loanProduct') {
+          const fItem = this.calculationCarInstance.loanDic.find(item => item.bank == value)
+          value = fItem?.value || ''
+        }
+        if (key === 'purchasedModel') {
+          value = this.findPurchasedModel(value)
+        }
+        if (key === 'tradeType') {
+          value = this.findTradeType(value)
+        }
+        this.form[key] = value
+      }
+      this.$message.success('操作成功，请仔细核对。')
     },
 
     closed() {
@@ -91,5 +163,9 @@ export default {
   .form-container {
     margin-top: 32px;
   }
+}
+
+.user-selected-wrapper {
+  display: flex;
 }
 </style>

@@ -87,7 +87,7 @@ export const sheetDic = [
       return data.map(item => {
         const { vehicleSeries, vehicleModel } = item
         item.label = `${vehicleSeries} ${vehicleModel}`
-        item.value = `${vehicleSeries}|${vehicleModel}`
+        item.value = `${vehicleSeries} ${vehicleModel}`
         return item
       })
     },

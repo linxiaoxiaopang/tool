@@ -1,6 +1,25 @@
 import { CalculationCar } from './utils'
 import { tradeTypeDic } from '@/views/xlsx/price/const'
 
+// 客户姓名:林东杰
+// 车型配置：海鸥自由
+// 按揭银行/年限/贷款金额：交行/60期/58000
+// 低开金额：11500
+// 置换金额 :3000
+// 开票价：64300
+// 上牌费: 500
+
+export const SELECTED_KEY_MAP = {
+  customer: ['客户', '客户姓名'],
+  purchasedModel: '车型配置',
+  loanProduct: '按揭银行',
+  loanAmount: '贷款金额',
+  invoicePriceCalculation: '开票价',
+  registrationFee: '上牌费',
+  tradeType: '置换金额',
+  customerInterestSubsidy: '低开金额'
+}
+
 export function getFormOption() {
   const instance = new CalculationCar({
     vmInstance: this
@@ -22,6 +41,7 @@ export function getFormOption() {
         label: '购买车型',
         prop: 'purchasedModel',
         type: 'select',
+        filterable: true,
         dicData: instance.profitSystemDic,
         // dicData: [],
         control: () => {
@@ -32,6 +52,7 @@ export function getFormOption() {
         label: '贷款产品',
         prop: 'loanProduct',
         type: 'select',
+        filterable: true,
         dicData: instance.loanDic,
         control: () => {
           instance.calcDealerLoanProfit()
