@@ -8,6 +8,7 @@ export function getFormOption() {
 
   const formOption = {
     labelWidth: 120,
+    span: 12,
     column: [
       {
         label: '客户',

@@ -40,11 +40,15 @@ export default {
           title: '新增',
           btnType: 'primary',
           btnSize: 'medium',
+          width: 1000,
+          height: '80vh',
           option: formOption
         },
         edit: {
           title: '编辑',
           btnType: 'text',
+          height: '80vh',
+          width: 1000,
           option: formOption,
           beforeOpen: () => {
             this.form = cloneDeep(this.data)

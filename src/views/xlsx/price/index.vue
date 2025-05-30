@@ -2,7 +2,7 @@
   <pageContainer class="flex-column">
     <baseTable class="tabs-active-border--primary" :key="key" :option="option" :data="data" v-bind="$attrs">
       <template #menuLeft>
-        <AddOrEdit @submit="onsubmit" />
+        <AddOrEdit @submit="onAdd" />
         <XlsxTable
           class="inline-block ml10"
           :isMergeCell="true"
@@ -16,7 +16,7 @@
       </template>
 
       <template #menu="{row}">
-        <AddOrEdit type="edit" :data="row" />
+        <AddOrEdit type="edit" :data="row" @submit="onEdit(row, ...arguments)" />
       </template>
     </baseTable>
   </pageContainer>
@@ -72,9 +72,27 @@ export default {
       updateSheetData(sheetData)
     },
 
-    onsubmit(form, done) {
+    onAdd(form, done) {
       this.data.push(form)
       done(true)
+    },
+
+    onEdit(row, form, done) {
+      const fIndex = this.data.findIndex(item => item === row)
+      this.data.splice(fIndex, 1, form)
+      done(true)
+    },
+
+    generateTemplate(row) {
+      const { column } = option
+      const exportColumn = column.filter(item => item.isExport)
+      let result = exportColumn.map(item => {
+        const tmpArr = []
+        const { label, prop } = item
+        tmpArr.push(label, ':', row[prop])
+        return tmpArr.join('')
+      })
+      return result.join('<br/>')
     },
 
     onExport() {
@@ -82,6 +100,41 @@ export default {
         this.$message.error('数据为空，无法导出。')
         return
       }
+      const result = this.data.map(item => {
+        return this.generateTemplate(item)
+      })
+      this.copyStyledText(result)
+    },
+
+    copyStyledText(result) {
+      // 创建一个隐藏的元素，用于存储带有样式的文本
+      var tempDiv = document.createElement('div')
+      tempDiv.style.position = 'absolute'
+      tempDiv.style.left = '-9999px'
+      tempDiv.style.top = '-9999px'
+      tempDiv.style.opacity = 0
+      tempDiv.innerHTML = `<div>${result.map(item => item + '<br/>').join('<br/>')}</div>`
+      console.log('tempDiv.innerHTML', tempDiv.innerHTML)
+      document.body.appendChild(tempDiv)
+      // 选择元素中的内容
+      var range = document.createRange()
+      range.selectNode(tempDiv)
+      // 获取选择对象
+      var selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+      try {
+        // 执行复制操作
+        document.execCommand('copy')
+        console.log('复制成功')
+        this.$message.success('复制成功')
+      } catch (err) {
+        this.$message.error('复制失败')
+        console.error('复制失败：', err)
+      }
+      // 清除选择和移除临时元素
+      selection.removeAllRanges()
+      document.body.removeChild(tempDiv)
     },
 
     getFormattedDate() {

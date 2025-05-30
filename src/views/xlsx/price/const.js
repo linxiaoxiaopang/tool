@@ -109,18 +109,49 @@ export const option = {
   column: [
     {
       label: '客户',
-      prop: 'customer'
+      prop: 'customer',
+      isExport: true
     },
-    { label: '车架号', prop: 'vinNumber' },
     {
       label: '购买车型',
-      prop: 'purchasedModel'
+      prop: 'purchasedModel',
+      isExport: true
     },
-    { label: '贷款产品', prop: 'loanProduct' },
-    { label: '贷款金额', prop: 'loanAmount' },
-    { label: '客户贷款贴息', prop: 'customerInterestSubsidy' },
-    { label: '店端贷款利润', prop: 'dealerLoanProfit' },
-    { label: '超出自律会金额', prop: 'amountExceedingRegulation' },
+    {
+      label: '车架号',
+      prop: 'vinNumber',
+      isExport: true
+    },
+    {
+      label: '贷款产品',
+      prop: 'loanProduct',
+      isExport: true
+    },
+    {
+      label: '贷款金额',
+      prop: 'loanAmount',
+      isExport: true
+    },
+    {
+      label: '店端贷款利润',
+      prop: 'dealerLoanProfit',
+      isExport: true
+    },
+    {
+      label: '客户贷款贴息',
+      prop: 'customerInterestSubsidy',
+      isExport: true
+    },
+    {
+      label: '保险赠送',
+      prop: 'registrationFee',
+      isExport: true
+    },
+    {
+      label: '超出自律会金额',
+      prop: 'amountExceedingRegulation',
+      isExport: true
+    },
     { label: '上牌费用', prop: 'dealerLoanProfit' },
     {
       label: '置换类型',
@@ -129,15 +160,38 @@ export const option = {
       dicData: tradeTypeDic
     },
     { label: '置换补贴', prop: 'tradeInSubsidy' },
-    { label: '保险赠送', prop: 'registrationFee' },
-    { label: '开票价计算', prop: 'invoicePriceCalculation' },
+    {
+      label: '开票价计算',
+      prop: 'invoicePriceCalculation',
+      isExport: true
+    },
     { label: '指导价', prop: 'guidePrice' },
     { label: '自律会优惠', prop: 'regulationDiscount' },
     { label: '金融补贴', prop: 'financialSubsidy' },
-    { label: '一级毛利', prop: 'grossProfitLevel1' },
-    { label: '二级毛利', prop: 'grossProfitLevel2' },
-    { label: '三级毛利', prop: 'grossProfitLevel3' },
-    { label: '订单综合毛利', prop: 'orderTotalGrossProfit' },
-    { label: '备注', prop: 'remarks' }
+    {
+      label: '一级毛利',
+      prop: 'grossProfitLevel1',
+      isExport: true
+    },
+    {
+      label: '二级毛利',
+      prop: 'grossProfitLevel2',
+      isExport: true
+    },
+    {
+      label: '三级毛利',
+      prop: 'grossProfitLevel3',
+      isExport: true
+    },
+    {
+      label: '订单综合毛利',
+      prop: 'orderTotalGrossProfit',
+      isExport: true
+    },
+    {
+      label: '备注',
+      prop: 'remarks',
+      isExport: true
+    }
   ]
 }
