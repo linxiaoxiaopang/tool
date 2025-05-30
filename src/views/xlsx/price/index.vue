@@ -90,8 +90,15 @@ export default {
       const exportColumn = column.filter(item => item.isExport)
       let result = exportColumn.map(item => {
         const tmpArr = []
-        const { label, prop } = item
-        tmpArr.push(label, ':', row[prop])
+        let { label, prop, handleExportValue , handleExportLabel} = item
+        let value = row[prop]
+        if(handleExportLabel) {
+          label = handleExportLabel(row)
+        }
+        if(handleExportValue) {
+          value = handleExportValue(row)
+        }
+        tmpArr.push(label, ': ', value)
         return tmpArr.join('')
       })
       return result.join('<br/>')

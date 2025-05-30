@@ -165,7 +165,12 @@ export const option = {
     {
       label: '开票价计算',
       prop: 'invoicePriceCalculation',
-      isExport: true
+      isExport: true,
+      handleExportValue(row) {
+        // 145800（指导价）-16000（自律会优惠）-11800（金融补贴）-8000（置换补贴）=110000元
+        const { guidePrice, regulationDiscount, financialSubsidy, tradeInSubsidy, invoicePriceCalculation } = row
+        return `${guidePrice}（指导价）-${regulationDiscount}（自律会优惠）-${financialSubsidy}（金融补贴）-${tradeInSubsidy}（置换补贴）=${invoicePriceCalculation}元`
+      }
     },
     { label: '指导价', prop: 'guidePrice' },
     { label: '自律会优惠', prop: 'regulationDiscount' },
@@ -173,17 +178,29 @@ export const option = {
     {
       label: '一级毛利',
       prop: 'grossProfitLevel1',
-      isExport: true
+      isExport: true,
+      handleExportLabel() {
+        // 一级毛利（开价-进价成本）：-27800元
+        return '一级毛利（开价-进价成本）'
+      }
     },
     {
       label: '二级毛利',
       prop: 'grossProfitLevel2',
-      isExport: true
+      isExport: true,
+      handleExportLabel() {
+        // （置换折让+提销差+终端折让）
+        return '二级毛利（置换折让+提销差+终端折让）'
+      }
     },
     {
       label: '三级毛利',
       prop: 'grossProfitLevel3',
-      isExport: true
+      isExport: true,
+      handleExportLabel() {
+        // （单车金融+单车保险+上牌利润+精品利润-赠送成本）
+        return '三级毛利（单车金融+单车保险+上牌利润+精品利润-赠送成本）'
+      }
     },
     {
       label: '订单综合毛利',
