@@ -1,4 +1,5 @@
 import { instanceCacheSheet } from './utils'
+import { accDiv, accMul } from '@/utils'
 
 export const loanKeyMap = {
   bank: '银行',
@@ -14,7 +15,7 @@ export const replacementKeyMap = {
 export const terminalDiscountKeyMap = {
   vehicleSeries: '车系',
   vehicleModel: '车型',
-  regulationDiscount: '折让额度'
+  discountAllowance: '折让额度'
 }
 
 export const profitSystemKeyMap = {
@@ -27,6 +28,12 @@ export const profitSystemKeyMap = {
   advertisingSupportConcession: '广告支持折让',
   sincereServiceAssessmentConcession: '精诚服务考核折让',
   wes: '智享服务体验(WES)折让'
+}
+
+export const filingKeyMap = {
+  vehicleSeries: '车系',
+  vehicleModel: '车型',
+  regulationDiscount: '备案差价'
 }
 
 export const tradeTypeDic = [
@@ -53,7 +60,7 @@ export const sheetDic = [
       return data.map(item => {
         const { bank, rate } = item
         item.label = `${bank}(${rate})`
-        item.value = rate
+        item.value = `${bank}_${rate}`
         return item
       })
     },
@@ -106,6 +113,19 @@ export const sheetDic = [
       })
     },
     keyMap: profitSystemKeyMap
+  },
+  {
+    label: '备案',
+    value: 'filing',
+    handleData(data) {
+      return data.map(item => {
+        const { vehicleSeries, vehicleModel } = item
+        item.label = `${vehicleSeries} ${vehicleModel}`
+        item.value = `${vehicleSeries} ${vehicleModel}`
+        return item
+      })
+    },
+    keyMap: filingKeyMap
   }
 ]
 
@@ -141,7 +161,13 @@ export const option = {
     {
       label: '贷款产品',
       prop: 'loanProduct',
-      isExport: true
+      isExport: true,
+      handleExportValue(row) {
+        const {loanProduct} = row
+        if(!loanProduct) return ''
+        const [label, value] = loanProduct.split('_')
+        return `${label}60期（返点${accMul(value, 100)}%）`
+      }
     },
     {
       label: '贷款金额',
@@ -159,8 +185,9 @@ export const option = {
       isExport: true
     },
     {
-      label: '保险赠送',
+      label: '价格优惠',
       prop: 'registrationFee',
+      type: 'text',
       isExport: true
     },
     {

@@ -31,6 +31,10 @@ export class CalculationCar {
     return this.sheetData.terminalDiscount
   }
 
+  get filingDic() {
+    return this.sheetData.filing
+  }
+
   get currentPurchased() {
     const { purchasedModel } = this.form
     return this.profitSystemDic.find(item => item.value === purchasedModel)
@@ -54,14 +58,27 @@ export class CalculationCar {
       value: this.currentPurchased.vehicleSeries,
       vehicleSeries: this.currentPurchased.vehicleSeries,
       vehicleModel: this.currentPurchased.vehicleModel,
-      regulationDiscount: '0'
+      discountAllowance: '0'
     }
+  }
+
+  get currentFiling() {
+    if (!this.currentPurchased) return null
+    return this.filingDic.find(item => {
+      return this.shakingSpace(item.vehicleSeries) == this.shakingSpace(this.currentPurchased.vehicleSeries) && this.shakingSpace(item.vehicleModel) == this.shakingSpace(this.currentPurchased.vehicleModel)
+    })
+  }
+
+  shakingSpace(value) {
+    if (!value) return
+    value = `${value}`
+    return value.replace(/\s/g, '').toLowerCase()
   }
 
   calcPurchasedModel() {
     if (!this.currentPurchased) return
     const { guidePrice } = this.currentPurchased
-    const { regulationDiscount } = this.currentTerminalDiscount
+    const { regulationDiscount } = this.currentFiling
     const { form } = this
     form.regulationDiscount = regulationDiscount
     form.guidePrice = guidePrice
@@ -91,7 +108,7 @@ export class CalculationCar {
       form.dealerLoanProfit = ''
       return
     }
-    form.dealerLoanProfit = accMul(loanAmount, loanProduct)
+    form.dealerLoanProfit = accMul(loanAmount, loanProduct.split('_')[1])
   }
 
   calcFinancialSubsidy() {
@@ -111,6 +128,26 @@ export class CalculationCar {
     this.form.invoicePriceCalculation = invoicePriceCalculation
   }
 
+  calcUseInvoicePriceCalculation() {
+    const { max } = Math
+    if (!this.currentFiling) {
+      this.form.amountExceedingRegulation = 0
+      this.form.insuranceGift = 0
+      return
+    }
+    const { guidePrice, invoicePriceCalculation, tradeInSubsidy, loanAmount, dealerLoanProfit } = this.form
+    const { regulationDiscount } = this.currentFiling
+    const subValue = accSub(guidePrice, invoicePriceCalculation, tradeInSubsidy, regulationDiscount)
+    if (subValue <= 0) {
+      this.form.amountExceedingRegulation = 0
+      this.form.insuranceGift = 0
+      return
+    }
+    const loanAmountQuota = accMul(loanAmount, 0.1)
+    this.form.amountExceedingRegulation = max(0, accSub(subValue, loanAmountQuota))
+    this.form.insuranceGift = max(0, accSub(subValue, dealerLoanProfit))
+  }
+
   calcGrossProfitLevel1() {
     const form = this.form
     const { invoicePriceCalculation } = form
@@ -123,8 +160,8 @@ export class CalculationCar {
       sincereServiceAssessmentConcession,
       wes
     } = this.currentPurchased
-    const deliveryPrice = accSub(invoicePriceCalculation, guidePrice, monthlyDeliveryConcession, advertisingSupportConcession, sincereServiceAssessmentConcession, wes)
-    form.grossProfitLevel1 = accAdd(deliveryPrice, priceDifference)
+    const deliveryPrice = accSub(invoicePriceCalculation, guidePrice)
+    form.grossProfitLevel1 = accAdd(deliveryPrice, priceDifference, monthlyDeliveryConcession, advertisingSupportConcession, sincereServiceAssessmentConcession, wes)
   }
 
   calcGrossProfitLevel2() {

@@ -49,6 +49,14 @@ export function getFormOption() {
         }
       },
       {
+        label: '开票价',
+        prop: 'invoicePriceCalculation',
+        control: () => {
+          instance.calcUseInvoicePriceCalculation()
+          instance.calcGrossProfitLevel1()
+        }
+      },
+      {
         label: '贷款产品',
         prop: 'loanProduct',
         type: 'select',
@@ -71,7 +79,7 @@ export function getFormOption() {
         label: '客户贷款贴息',
         prop: 'customerInterestSubsidy',
         control() {
-          instance.calcCustomerInterestSubsidy()
+          // instance.calcCustomerInterestSubsidy()
         }
       },
       {
@@ -122,21 +130,13 @@ export function getFormOption() {
         prop: 'tradeInSubsidy',
         type: 'text',
         value: 0,
-        control: () => {
-          instance.calcInvoicePriceCalculation()
-        }
+        // control: () => {
+        //   instance.calcInvoicePriceCalculation()
+        // }
       },
       {
-        label: '保险赠送',
+        label: '价格优惠',
         prop: 'insuranceGift'
-      },
-      {
-        label: '开票价计算',
-        prop: 'invoicePriceCalculation',
-        control: () => {
-          instance.calcGrossProfitLevel1()
-        },
-        type: 'text'
       },
       {
         label: '指导价',

@@ -121,6 +121,7 @@ export default {
     },
 
     onAnalysis() {
+      const { max } = Math
       const selectedContent = this.selectedContent
       if (!selectedContent) return
       const splitLineData = selectedContent.split('\n')
@@ -147,6 +148,9 @@ export default {
           value = this.findTradeType(value)
         }
         this.form[key] = value
+      }
+      if (this.form.customerInterestSubsidy) {
+        this.form.customerInterestSubsidy = max(this.form.customerInterestSubsidy, this.form.dealerLoanProfit, 0)
       }
       this.$message.success('操作成功，请仔细核对。')
     },
