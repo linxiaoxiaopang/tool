@@ -82,6 +82,8 @@ module.exports = {
 
   chainWebpack: (config) => {
     config.module.rule('svg').exclude.add(resolve('src/icons')).end()
+    config.plugins.delete('preload')
+    config.plugins.delete('prefetch')
 
     config.module
       .rule('icons')
