@@ -31,15 +31,30 @@ export function getFormOption() {
     column: [
       {
         label: '客户',
-        prop: 'customer'
+        prop: 'customer',
+        rules: [
+          {
+            required: true
+          }
+        ]
       },
       {
         label: '车架号',
-        prop: 'vinNumber'
+        prop: 'vinNumber',
+        rules: [
+          {
+            required: true
+          }
+        ]
       },
       {
         label: '购买车型',
         prop: 'purchasedModel',
+        rules: [
+          {
+            required: true
+          }
+        ],
         type: 'select',
         filterable: true,
         dicData: instance.profitSystemDic,
@@ -51,6 +66,11 @@ export function getFormOption() {
       {
         label: '开票价',
         prop: 'invoicePriceCalculation',
+        rules: [
+          {
+            required: true
+          }
+        ],
         control: () => {
           instance.calcUseInvoicePriceCalculation()
           instance.calcGrossProfitLevel1()
@@ -59,6 +79,11 @@ export function getFormOption() {
       {
         label: '贷款产品',
         prop: 'loanProduct',
+        rules: [
+          {
+            required: true
+          }
+        ],
         type: 'select',
         filterable: true,
         dicData: instance.loanDic,
@@ -69,6 +94,11 @@ export function getFormOption() {
       {
         label: '贷款金额',
         prop: 'loanAmount',
+        rules: [
+          {
+            required: true
+          }
+        ],
         control: () => {
           // instance.calcFinancialSubsidy()
           instance.calcDealerLoanProfit()

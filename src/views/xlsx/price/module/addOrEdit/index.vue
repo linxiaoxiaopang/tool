@@ -17,7 +17,7 @@
 
 <script>
 import { getFormOption, SELECTED_KEY_MAP } from './const'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isArray, isUndefined } from 'lodash'
 import { changeArrKey } from '@/utils'
 import { CalculationCar } from '@/views/xlsx/price/module/addOrEdit/utils'
 
@@ -147,6 +147,25 @@ export default {
       return findLoan
     },
 
+    validateKeys(obj) {
+      const keys = Object.keys(SELECTED_KEY_MAP)
+      const errList = []
+      keys.map(key => {
+        const value = obj[key]
+        if(isUndefined(value)) {
+          const keyValues = SELECTED_KEY_MAP[key]
+          let label = ''
+          if(isArray(keyValues)) {
+            label = keyValues[0]
+          } else {
+            label = keyValues
+          }
+          errList.push(label)
+        }
+      })
+      return [errList.length, `${errList.join('、')}输入数据异常。`]
+    },
+
     onAnalysis() {
       const { max } = Math
       const selectedContent = this.selectedContent
@@ -216,6 +235,11 @@ export default {
       }
       if (this.form.customerInterestSubsidy) {
         this.form.customerInterestSubsidy = max(this.form.customerInterestSubsidy, this.form.dealerLoanProfit, 0)
+      }
+      const [err, errMsg] =this.validateKeys(obj)
+      if(err) {
+        this.$message.error(errMsg)
+        return
       }
       this.$message.success('操作成功，请仔细核对。')
     },
