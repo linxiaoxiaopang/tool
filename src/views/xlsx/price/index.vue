@@ -3,6 +3,10 @@
     <baseTable class="tabs-active-border--primary" :key="key" :option="option" :data="data" v-bind="$attrs">
       <template #menuLeft>
         <AddOrEdit @submit="onAdd" />
+        <el-button class="ml10" type="primary" @click="onExport"> 导出结果</el-button>
+      </template>
+
+      <template #menuRight>
         <XlsxTable
           class="inline-block ml10"
           :isMergeCell="true"
@@ -10,9 +14,8 @@
           :keepOrigin="true"
           @on-map-select-file="onSelectMapData"
         >
-          <el-button type="primary"> 上传规则</el-button>
+          <el-button type="primary"> {{dataBaseDate ? `(${dataBaseDate})` :　'' }} 更新数据库</el-button>
         </XlsxTable>
-        <el-button class="ml10" type="primary" @click="onExport"> 导出结果</el-button>
       </template>
 
       <template #menu="{row}">
@@ -30,6 +33,7 @@ import AddOrEdit from './module/addOrEdit'
 import { changeArrKey, getUUID } from '@/utils'
 import { option, sheetDic, updateSheetData } from './const'
 import { instanceCacheSheet } from './utils'
+import { formatDate } from 'element-ui/src/utils/date-util'
 
 export default {
   components: {
@@ -50,6 +54,7 @@ export default {
 
   data() {
     return {
+      dataBaseDate: instanceCacheSheet.get()?.date || '',
       column: [],
       data: [],
       key: getUUID()
@@ -70,6 +75,8 @@ export default {
         const { body } = excelData[sheetName]
         sheetData[prop] = handleData(changeArrKey(body, keyMap))
       }
+      sheetData.date = formatDate(new Date())
+      this.dataBaseDate = sheetData.date
       instanceCacheSheet.update(sheetData)
       updateSheetData(sheetData)
     },
