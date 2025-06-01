@@ -3,7 +3,8 @@ import { accDiv, accMul } from '@/utils'
 
 export const loanKeyMap = {
   bank: '银行',
-  rate: '利率'
+  rate: '利率',
+  keyword: '关键字'
 }
 
 export const replacementKeyMap = {
@@ -163,8 +164,8 @@ export const option = {
       prop: 'loanProduct',
       isExport: true,
       handleExportValue(row) {
-        const {loanProduct} = row
-        if(!loanProduct) return ''
+        const { loanProduct } = row
+        if (!loanProduct) return ''
         const [label, value] = loanProduct.split('_')
         return `${label}60期（返点${accMul(value, 100)}%）`
       }
@@ -172,28 +173,33 @@ export const option = {
     {
       label: '贷款金额',
       prop: 'loanAmount',
-      isExport: true
+      isExport: true,
+      suffix: '元'
     },
     {
       label: '店端贷款利润',
       prop: 'dealerLoanProfit',
-      isExport: true
+      isExport: true,
+      suffix: '元'
     },
     {
       label: '客户贷款贴息',
       prop: 'customerInterestSubsidy',
-      isExport: true
+      isExport: true,
+      suffix: '元'
     },
     {
       label: '价格优惠',
-      prop: 'registrationFee',
+      prop: 'insuranceGift',
       type: 'text',
-      isExport: true
+      isExport: true,
+      suffix: '元'
     },
     {
       label: '超出自律会金额',
       prop: 'amountExceedingRegulation',
-      isExport: true
+      isExport: true,
+      suffix: '元'
     },
     { label: '上牌费用', prop: 'dealerLoanProfit' },
     {
@@ -209,8 +215,19 @@ export const option = {
       isExport: true,
       handleExportValue(row) {
         // 145800（指导价）-16000（自律会优惠）-11800（金融补贴）-8000（置换补贴）=110000元
-        const { guidePrice, regulationDiscount, financialSubsidy, tradeInSubsidy, invoicePriceCalculation } = row
-        return `${guidePrice}（指导价）-${regulationDiscount}（自律会优惠）-${financialSubsidy}（金融补贴）-${tradeInSubsidy}（置换补贴）=${invoicePriceCalculation}元`
+        const {
+          guidePrice,
+          regulationDiscount,
+          financialSubsidy,
+          tradeInSubsidy,
+          invoicePriceCalculation,
+          insuranceGift
+        } = row
+        let insuranceGiftStr = ''
+        if (insuranceGift > 0) {
+          insuranceGiftStr = `-${insuranceGift}（价格优惠）`
+        }
+        return `${guidePrice}（指导价）-${regulationDiscount}（自律会优惠）-${financialSubsidy}（金融补贴）-${tradeInSubsidy}（置换补贴）${insuranceGiftStr} = ${invoicePriceCalculation}元`
       }
     },
     { label: '指导价', prop: 'guidePrice' },
@@ -220,15 +237,17 @@ export const option = {
       label: '一级毛利',
       prop: 'grossProfitLevel1',
       isExport: true,
+      suffix: '元',
       handleExportLabel() {
         // 一级毛利（开价-进价成本）：-27800元
-        return '一级毛利（开价-进价成本）'
+        return '一级毛利（开票价-进价成本）'
       }
     },
     {
       label: '二级毛利',
       prop: 'grossProfitLevel2',
       isExport: true,
+      suffix: '元',
       handleExportLabel() {
         // （置换折让+提销差+终端折让）
         return '二级毛利（置换折让+提销差+终端折让）'
@@ -238,6 +257,7 @@ export const option = {
       label: '三级毛利',
       prop: 'grossProfitLevel3',
       isExport: true,
+      suffix: '元',
       handleExportLabel() {
         // （单车金融+单车保险+上牌利润+精品利润-赠送成本）
         return '三级毛利（单车金融+单车保险+上牌利润+精品利润-赠送成本）'

@@ -90,14 +90,17 @@ export default {
       const exportColumn = column.filter(item => item.isExport)
       let result = exportColumn.map(item => {
         const tmpArr = []
-        let { label, prop, handleExportValue , handleExportLabel} = item
+        let { label, prop, handleExportValue, handleExportLabel, suffix } = item
         let value = row[prop]
-        if(handleExportLabel) {
+        if (handleExportLabel) {
           label = handleExportLabel(row)
         }
-        if(handleExportValue) {
+        if (handleExportValue) {
           value = handleExportValue(row)
+        } else if (suffix) {
+          value = `${value}${suffix}`
         }
+
         tmpArr.push(label, ': ', value)
         return tmpArr.join('')
       })

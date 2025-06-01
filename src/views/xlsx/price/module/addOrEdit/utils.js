@@ -85,12 +85,6 @@ export class CalculationCar {
     this.calcGrossProfitLevel2()
   }
 
-  calcCustomerInterestSubsidy() {
-    const { customerInterestSubsidy, loanAmount } = this.form
-    const { max } = Math
-    this.form.amountExceedingRegulation = max(accSub(customerInterestSubsidy, accMul(loanAmount, 0.1)), 0)
-  }
-
   calcTradeInSubsidy() {
     const { form, currentReplacement } = this
     let { tradeType } = form
@@ -129,7 +123,7 @@ export class CalculationCar {
   }
 
   calcUseInvoicePriceCalculation() {
-    const { max } = Math
+    const { max, min } = Math
     if (!this.currentFiling) {
       this.form.amountExceedingRegulation = 0
       this.form.insuranceGift = 0
@@ -141,11 +135,13 @@ export class CalculationCar {
     if (subValue <= 0) {
       this.form.amountExceedingRegulation = 0
       this.form.insuranceGift = 0
+      this.form.customerInterestSubsidy = 0
       return
     }
     const loanAmountQuota = accMul(loanAmount, 0.1)
     this.form.amountExceedingRegulation = max(0, accSub(subValue, loanAmountQuota))
     this.form.insuranceGift = max(0, accSub(subValue, dealerLoanProfit))
+    this.form.customerInterestSubsidy = min(dealerLoanProfit, subValue)
   }
 
   calcGrossProfitLevel1() {
@@ -164,10 +160,21 @@ export class CalculationCar {
     form.grossProfitLevel1 = accAdd(deliveryPrice, priceDifference, monthlyDeliveryConcession, advertisingSupportConcession, sincereServiceAssessmentConcession, wes)
   }
 
+  calcMakers() {
+    const { customerInterestSubsidy, insuranceGift } = this.form
+    let insuranceGiftStr = ''
+    if(insuranceGift) {
+      insuranceGiftStr = `，价格优惠${insuranceGift}元`
+    }
+    this.form.remarks = `由于市场竞争，特申请金融补贴${customerInterestSubsidy}元${insuranceGiftStr}，请领导审批！`
+  }
+
   calcGrossProfitLevel2() {
     const form = this.form
-    const { tradeInSubsidy, regulationDiscount } = this.form
-    form.grossProfitLevel2 = accAdd(tradeInSubsidy, regulationDiscount)
+    const { tradeInSubsidy } = this.form
+    if (!this.currentTerminalDiscount) return
+    const { discountAllowance } = this.currentTerminalDiscount
+    form.grossProfitLevel2 = accAdd(tradeInSubsidy, discountAllowance)
   }
 
   calcGrossProfitLevel3() {

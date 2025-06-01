@@ -8,7 +8,7 @@
   >
     <template #bodyHeader>
       <div class="user-selected-wrapper" v-if="option.showUserSelected">
-        <avue-crud-input type="textarea" v-model="selectedContent" class="mr24"></avue-crud-input>
+        <avue-crud-input type="textarea" v-model="selectedContent" class="mr24" :minRows="8"></avue-crud-input>
         <el-button type="primary" @click="onAnalysis">解析</el-button>
       </div>
     </template>
@@ -84,21 +84,35 @@ export default {
 
   methods: {
     findPurchasedModel(value) {
+      value = value.toLowerCase()
       let searchValue = value
       const profitSystemDic = this.calculationCarInstance.profitSystemDic
-      let fItem = profitSystemDic.find(item => item.value == value)
+      let fItem = profitSystemDic.find(item => item.value.toLowerCase() == value)
       searchValue = fItem?.value || ''
       if (searchValue) return searchValue
-      fItem = profitSystemDic.find(item => item.value.indexOf(value) >= 0)
+      fItem = profitSystemDic.find(item => item.value.toLowerCase().indexOf(value) >= 0)
       searchValue = fItem?.value || ''
       if (searchValue) return searchValue
       fItem = profitSystemDic.find(item => {
-        let itemValue = item.value
+        let itemValue = item.value.toLowerCase()
         const splitValue = value.split('')
         for (let sItem of splitValue) {
           const fIndex = itemValue.indexOf(sItem)
           if (fIndex < 0) return
           itemValue = itemValue.substr(fIndex + 1)
+        }
+        return true
+      })
+      searchValue = fItem?.value || ''
+      fItem = profitSystemDic.find(item => {
+        let itemValue = item.value.toLowerCase()
+        const splitValue = value.split('')
+        for (let sItem of splitValue) {
+          const fIndex = itemValue.indexOf(sItem)
+          if (fIndex < 0) return
+          itemValue = [...itemValue]
+          itemValue.splice(fIndex, 1)
+          itemValue = itemValue.join('')
         }
         return true
       })
@@ -120,6 +134,19 @@ export default {
       return '0'
     },
 
+    findLoan(value) {
+      const { loanDic } = this.calculationCarInstance
+      let findLoan = loanDic.find(sItem => {
+        return value.indexOf(sItem.bank) >= 0
+      })
+      if (!findLoan) {
+        findLoan = loanDic.find(sItem => {
+          return value.indexOf(sItem.keyword) >= 0
+        })
+      }
+      return findLoan
+    },
+
     onAnalysis() {
       const { max } = Math
       const selectedContent = this.selectedContent
@@ -127,12 +154,47 @@ export default {
       const splitLineData = selectedContent.split('\n')
       const splitData = {}
       splitLineData.map(item => {
-        const [keysStr, valuesStr] = item.split(/:|：/)
-        const keys = keysStr.split('/')
-        const values = valuesStr.split('/')
-        keys.map((key, index) => {
-          splitData[key] = values[index]
-        })
+        try {
+          const [keysStr, valuesStr] = item.split(/:|：/)
+          const keys = keysStr.split('/')
+          let values = valuesStr.split('/')
+          if ((keysStr.indexOf('银行') >= 0 || keysStr.indexOf('购车方式') >= 0) && keysStr.indexOf('贷款') >= 0 && keys.length !== values.length) {
+            values = []
+            let findLoan = this.findLoan(valuesStr)
+            values.push(findLoan?.bank || '')
+            const matchData = valuesStr.match(/\d+/g)
+            if (!matchData) {
+              values.push(60)
+              values.push(0)
+              return
+            }
+            let num1 = matchData.shift()
+            let num2 = matchData.shift() || 0
+            if (num1 == 60 || +num2 > +num1) {
+              //贷款金额不能小于1000
+              if (num2 < 1000 && num2 != 0) {
+                num2 = 0
+              }
+            } else if (+num2 <= +num1) {
+              let tmpNum = num1
+              num1 = num2
+              num2 = tmpNum
+            }
+            values.push(num1)
+            values.push(num2)
+          }
+
+          keys.map((key, index) => {
+            if (key.indexOf('银行') >= 0 || key.indexOf('购车方式') >= 0) {
+              const findLoan = this.findLoan(values[index])
+              splitData[key] = findLoan?.bank
+            } else {
+              splitData[key] = values[index]
+            }
+          })
+        } catch (err) {
+          console.log('err', err)
+        }
       })
       const obj = changeArrKey([splitData], SELECTED_KEY_MAP)[0]
       for (let key in obj) {
@@ -145,6 +207,9 @@ export default {
           value = this.findPurchasedModel(value)
         }
         if (key === 'tradeType') {
+          value = this.findTradeType(value)
+        }
+        if (key == 'bank') {
           value = this.findTradeType(value)
         }
         this.form[key] = value
