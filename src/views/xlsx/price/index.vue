@@ -7,6 +7,7 @@
       </template>
 
       <template #menuRight>
+        <el-button class="ml10" type="danger" @click="onClear"> 清空数据</el-button>
         <XlsxTable
           class="inline-block ml10"
           :isMergeCell="true"
@@ -14,12 +15,14 @@
           :keepOrigin="true"
           @on-map-select-file="onSelectMapData"
         >
-          <el-button type="primary"> {{dataBaseDate ? `(${dataBaseDate})` :　'' }} 更新数据库</el-button>
+          <el-button type="primary"> {{ dataBaseDate ? `(${dataBaseDate})` : '' }} 更新数据库</el-button>
         </XlsxTable>
       </template>
 
       <template #menu="{row}">
         <AddOrEdit type="edit" :data="row" @submit="onEdit(row, ...arguments)" />
+        <el-button class="ml10" type="text" @click="onDelete(row)"> 删除</el-button>
+        <el-button class="ml10" type="text" @click="onExport(row)"> 导出结果</el-button>
       </template>
     </baseTable>
   </pageContainer>
@@ -34,6 +37,7 @@ import { changeArrKey, getUUID } from '@/utils'
 import { option, sheetDic, updateSheetData } from './const'
 import { instanceCacheSheet } from './utils'
 import { formatDate } from 'element-ui/src/utils/date-util'
+import { isArray } from 'lodash'
 
 export default {
   components: {
@@ -81,6 +85,17 @@ export default {
       updateSheetData(sheetData)
     },
 
+    onDelete(row) {
+      const fIndex = this.data.findIndex(item => item == row)
+      if (fIndex >= 0) {
+        this.data.splice(fIndex, 1)
+      }
+    },
+
+    onClear() {
+      this.data = []
+    },
+
     onAdd(form, done) {
       this.data.push(form)
       done(true)
@@ -114,12 +129,14 @@ export default {
       return result.join('<br/>')
     },
 
-    onExport() {
-      if (!this.data.length) {
+    onExport(data) {
+      if (!data) data = this.data
+      if (!isArray(data)) data = [data]
+      if (!data.length) {
         this.$message.error('数据为空，无法导出。')
         return
       }
-      const result = this.data.map(item => {
+      const result = data.map(item => {
         return this.generateTemplate(item)
       })
       this.copyStyledText(result)

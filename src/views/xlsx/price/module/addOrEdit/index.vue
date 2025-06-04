@@ -48,7 +48,7 @@ export default {
         add: {
           title: '新增',
           btnType: 'primary',
-          btnSize: 'medium',
+          btnSize: 'large',
           showUserSelected: true,
           width: 1000,
           height: '80vh',
