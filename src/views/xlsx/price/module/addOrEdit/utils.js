@@ -35,6 +35,10 @@ export class CalculationCar {
     return this.sheetData.filing
   }
 
+  get interestFreeDic() {
+    return this.sheetData.interestFree
+  }
+
   get currentPurchased() {
     const { purchasedModel } = this.form
     return this.profitSystemDic.find(item => item.value === purchasedModel)

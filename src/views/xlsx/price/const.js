@@ -37,6 +37,16 @@ export const filingKeyMap = {
   regulationDiscount: '备案差价'
 }
 
+export const interestFreeMap = {
+  channel: '渠道',
+  vehicleSeries: '车系',
+  productName: '产品名称',
+  maxFinancingAmount: '最高融资金额',
+  productTerm: '产品期限',
+  rebate: '返利',
+  dealerProfitAfterDiscount: '贴息后经销商利润'
+}
+
 export const tradeTypeDic = [
   {
     label: '无',
@@ -127,6 +137,19 @@ export const sheetDic = [
       })
     },
     keyMap: filingKeyMap
+  },
+  {
+    label: '免息',
+    value: 'interestFree',
+    handleData(data) {
+      return data.map(item => {
+        const { productName, dealerProfitAfterDiscount } = item
+        item.label = productName
+        item.value = dealerProfitAfterDiscount
+        return item
+      })
+    },
+    keyMap: interestFreeMap
   }
 ]
 
