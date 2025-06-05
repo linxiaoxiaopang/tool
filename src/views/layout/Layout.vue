@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper" :class="appWrapperClass">
-    <LayoutHeader v-show="hasLayoutHeader" />
+    <component :is="layoutHeaderName" v-show="hasLayoutHeader" />
     <div class="app-main-content">
       <section class="app-content">
         <div class="left-sidebar" v-if="showSidebar">
@@ -16,7 +16,8 @@
 
 <script>
 import { Sidebar, AppMain } from './components'
-import LayoutHeader from './components/LayoutHeader/index'
+import LayoutHeader from './components/LayoutHeader'
+import MobileLayoutHeader from './components/MobileLayoutHeader'
 import ResizeMixin from './mixin/ResizeHandler'
 import WebNotice from '@/views/login/module/webNotice.vue'
 import { SHOW_SIDEBAR, SHOW_PERSONAL, isShowSidebar } from '@/utils/constant'
@@ -28,6 +29,7 @@ export default {
   components: {
     AppMain,
     LayoutHeader,
+    MobileLayoutHeader,
     WebNotice
   },
 
@@ -55,6 +57,11 @@ export default {
 
   computed: {
     ...mapGetters(['name', 'isAuth']),
+
+    layoutHeaderName() {
+      return isTouchDevice ? MobileLayoutHeader : LayoutHeader
+    },
+
     showSidebar({ sidebarType }) {
       return isShowSidebar(sidebarType)
     },

@@ -20,14 +20,14 @@ import Layout from '@/views/layout/Layout'
 **/
 
 const isDev = process.env.NODE_ENV === 'development'
-
+const redirect = isTouchDevice ? '/biyadi' : '/xlsx'
 export const constantRouterMap = [
   {
+    redirect,
     path: '/',
     name: 'topic',
     component: Layout,
     hidden: true,
-    redirect: '/xlsx'
   },
   {
     path: '/login',

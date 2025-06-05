@@ -15,6 +15,16 @@
     <%= htmlWebpackPlugin.options.title %>
   </title>
   <link rel="stylesheet" href="<%= BASE_URL %>iconFont/iconfont_1.css">
+  <script type="text/javascript">
+    // 判断是否支持触摸事件（手机/平板通常支持）
+    window.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    if (isTouchDevice) {
+      document.querySelector('meta[name=viewport]').content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+      setTimeout(() =>{
+        document.body.classList.add('global-touch-device')
+      }, 20)
+    }
+  </script>
 </head>
 
 <body>

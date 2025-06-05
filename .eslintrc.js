@@ -13,6 +13,7 @@ module.exports = {
   globals: {
     $SUC: false,
     $GET: false,
+    isTouchDevice: false,
     fabric: false,
     thunderLink: false
   },

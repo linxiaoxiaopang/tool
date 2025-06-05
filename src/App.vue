@@ -105,3 +105,15 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.global-touch-device {
+  .app-wrapper {
+    min-width: initial;
+  }
+
+  .app-content {
+    background-color: initial;
+  }
+}
+</style>
