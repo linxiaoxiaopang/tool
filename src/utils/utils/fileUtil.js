@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx'
 import { Message } from 'element-ui'
 import axios from 'axios'
 import { OSS_SEPARATOR } from '@/utils/constant/imageConst'
+import { getURLBlod } from '@/utils'
 
 export function file2Base64(file) {
   return new Promise((resolve, reject) => {
@@ -40,10 +41,10 @@ export function getFillFileName(path = '', fileName) {
 export function fileReader(file, readerType = 'readAsText', encoding) {
   return new Promise((resolve) => {
     const fileReader = new FileReader()
-    fileReader.onloadend = function (e) {
+    fileReader.onloadend = function(e) {
       resolve(e.target.result)
     }
-    fileReader.onerror = function (e) {
+    fileReader.onerror = function(e) {
       resolve(false)
     }
     fileReader[readerType](file, encoding)
@@ -53,11 +54,11 @@ export function fileReader(file, readerType = 'readAsText', encoding) {
 export function file2Content(file) {
   return new Promise((resolve) => {
     const fileReader = new FileReader()
-    fileReader.onloadend = function (e) {
+    fileReader.onloadend = function(e) {
       const result = e.target.result
       resolve(result)
     }
-    fileReader.onerror = function (e) {
+    fileReader.onerror = function(e) {
       resolve(false)
     }
     fileReader.readAsText(file, 'utf-8')
@@ -67,11 +68,11 @@ export function file2Content(file) {
 export function file2Uint8Array(file) {
   return new Promise((resolve) => {
     const fileReader = new FileReader()
-    fileReader.onloadend = function (e) {
+    fileReader.onloadend = function(e) {
       const result = e.target.result
       resolve(new Uint8Array(result))
     }
-    fileReader.onerror = function (e) {
+    fileReader.onerror = function(e) {
       resolve(false)
     }
     fileReader.readAsArrayBuffer(file)
@@ -221,12 +222,12 @@ export function analysisFileByAxios(url, config = {}) {
     .then((res) => {
       const { status, data } = res || {}
       if (status >= 200 && status < 300) {
-        if(config.passFileReader) {
+        if (config.passFileReader) {
           return data
         }
         const fileReader = new FileReader()
         const p = new Promise((resolve, reject) => {
-          fileReader.onloadend = function (e) {
+          fileReader.onloadend = function(e) {
             resolve(e.target.result)
           }
         })
@@ -235,7 +236,7 @@ export function analysisFileByAxios(url, config = {}) {
       }
     })
     .catch((err) => {
-      console.log("err", err)
+      console.log('err', err)
       const { message } = err
       if (message && message.cancelMessage) {
         Message.success('取消下载成功')
@@ -255,4 +256,12 @@ export function dataURLToBlob(fileDataURL, filename) {
     u8arr[n] = bstr.charCodeAt(n)
   }
   return new File([u8arr], filename, { type: mime })
+}
+
+//解析json数据
+export async function initJsonData(jsonSrc) {
+  const json = await getURLBlod(jsonSrc)
+  if (!json) return {}
+  const content = await file2Content(json)
+  return JSON.parse(content || '{}')
 }

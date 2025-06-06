@@ -1,6 +1,7 @@
 <template>
   <div class="data-base-component">
     <XlsxTable
+      ref="xlsxTable"
       class="inline-block ml10"
       :isMergeCell="true"
       :analysisAll="true"

@@ -1,5 +1,6 @@
 import { instanceCacheSheet } from './utils'
 import { accDiv, accMul } from '@/utils'
+import { isArray } from 'lodash'
 
 export const loanKeyMap = {
   bank: '银行',
@@ -153,15 +154,18 @@ export const sheetDic = [
   }
 ]
 
-export let sheetData = instanceCacheSheet.get() || sheetDic.reduce((prev, cur) => {
-  prev[cur.value] = []
-  return prev
-}, {})
+
+// export let sheetData = instanceCacheSheet.get() || defaultSheetData
+export let sheetData = getDefaultSheetData()
 
 export function updateSheetData(data) {
   Object.keys(sheetData).map(key => {
-    sheetData[key].length = 0
-    sheetData[key].push(...data[key])
+    if (isArray(sheetData[key])) {
+      sheetData[key].length = 0
+      sheetData[key].push(...data[key])
+    } else {
+      sheetData[key] = data[key]
+    }
   })
 }
 
@@ -294,7 +298,18 @@ export const option = {
     {
       label: '备注',
       prop: 'remarks',
+      props: {
+        type: 'textarea'
+      },
+      type: 'textarea',
       isExport: true
     }
   ]
+}
+
+export function getDefaultSheetData() {
+  return sheetDic.reduce((prev, cur) => {
+    prev[cur.value] = []
+    return prev
+  }, {})
 }

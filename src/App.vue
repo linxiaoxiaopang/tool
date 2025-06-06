@@ -112,7 +112,7 @@ export default {
     min-width: initial;
   }
 
-  .app-content {
+  .app-content.app-content.app-content {
     background-color: initial;
   }
 }

@@ -7,7 +7,7 @@ process.env.VUE_APP_ENV_STAGE = process.env.ENV_STAGE //将ENV_STAGE 赋值给VU
 const version = new Date().getTime()
 /* eslint-disable */
 const CONFIG = {
-  TITLE: '正丁-小工具管理系统',
+  TITLE: '小工具管理系统',
   DEVSERVER:
     process.env.ENV_STAGE === 'serve'
       ? {

@@ -4,18 +4,28 @@
       <avue-crud-input type="textarea" v-model="selectedContent" class="mr24" :minRows="6"></avue-crud-input>
       <el-button type="primary" @click="onAnalysis">解析</el-button>
     </div>
-    <baseForm ref="baseForm" size="medium" class="base-form-container" v-model="form" :option="finalOption" ></baseForm>
+    <baseForm :key="baseFormKey" ref="baseForm" size="medium" class="base-form-container" v-model="form" :option="finalOption"></baseForm>
 
-    <el-button class="copy mt10" type="primary" size="medium" @click="onsubmit">复制</el-button>
+    <div class="btn-wrapper mt10">
+      <el-button class="copy mr10" type="danger" size="medium" @click="onClear">清空</el-button>
+      <el-button class="copy" type="primary" size="medium" @click="onsubmit">复制</el-button>
+    </div>
   </div>
 </template>
 
 <script>
 import price from '@/views/xlsx/price'
 import addOrEdit from '@/views/xlsx/price/module/addOrEdit'
+import { getUUID } from '@/utils'
 
 export default {
   mixins: [price, addOrEdit],
+
+  data() {
+    return {
+      baseFormKey: getUUID()
+    }
+  },
 
   computed: {
     finalOption({ option }) {
@@ -26,7 +36,17 @@ export default {
     }
   },
 
+  created() {
+    this.$on('afterDataBaseInitUpdate', () => {
+      this.baseFormKey = getUUID()
+    })
+  },
+
   methods: {
+    onClear() {
+      this.$refs.baseForm.resetFields()
+    },
+
     async onsubmit() {
       const isValid = await this.$refs.baseForm.validate().catch(() => false)
       if (!isValid) return
@@ -51,8 +71,14 @@ export default {
     background: #fff;
   }
 
+  .btn-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
   .copy {
-    padding: 25px;
+    flex: 1;
+    padding: 20px;
   }
 }
 </style>

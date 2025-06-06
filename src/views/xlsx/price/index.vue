@@ -9,6 +9,7 @@
       <template #menuRight>
         <el-button class="ml10" type="danger" @click="onClear"> 清空数据</el-button>
         <XlsxTable
+          ref="xlsxTable"
           class="inline-block ml10"
           :isMergeCell="true"
           :analysisAll="true"
@@ -33,11 +34,12 @@ import baseTableChild from '@/components/base/baseTable/mixins/baseTableChild'
 import getBaseTableDataMixin from '@/components/base/baseTable/mixins/getBaseTableDataMixin'
 import XlsxTable from '@/components/xlsxTable.vue'
 import AddOrEdit from './module/addOrEdit'
-import { changeArrKey, getUUID } from '@/utils'
-import { option, sheetDic, updateSheetData } from './const'
+import { changeArrKey, getUUID, initJsonData } from '@/utils'
+import { getDefaultSheetData, option, sheetDic, updateSheetData } from './const'
 import { instanceCacheSheet } from './utils'
 import { formatDate } from 'element-ui/src/utils/date-util'
-import { isArray } from 'lodash'
+import { isArray, merge } from 'lodash'
+import { uploadToOss } from '@/commons/webOss'
 
 export default {
   components: {
@@ -58,7 +60,7 @@ export default {
 
   data() {
     return {
-      dataBaseDate: instanceCacheSheet.get()?.date || '',
+      dataBaseDate: '',
       column: [],
       data: [],
       key: getUUID()
@@ -71,8 +73,37 @@ export default {
     }
   },
 
+  mounted() {
+    this.initSheetData()
+  },
+
   methods: {
-    onSelectMapData(excelData) {
+    async initSheetData() {
+      this.$emit('beforeDataBaseUpdate')
+      const src = 'https://lgy-tool.oss-cn-beijing.aliyuncs.com/asset/dataBase.json'
+      const res = await awaitLoadingOnly(initJsonData(src))
+      const sheetData = merge({}, getDefaultSheetData(), res)
+      instanceCacheSheet.update(sheetData)
+      this.dataBaseDate = sheetData.date || ''
+      updateSheetData(sheetData)
+      this.$emit('afterDataBaseInitUpdate')
+    },
+
+    jsonToBlob(json) {
+      const jsonData = json
+      const jsonString = JSON.stringify(jsonData, null, 2) // 转为格式化的 JSON 字符串
+      // 创建 Blob 对象，指定 MIME 类型为 application/json
+      const blob = new Blob([jsonString], { type: 'application/json' })
+      return new File([blob], 'dataBase.json', {
+        type: blob.type,          // 继承 Blob 的 MIME 类型
+        lastModified: Date.now()  // 当前时间作为修改日期
+      })
+    },
+
+    async onSelectMapData(excelData) {
+      const file = this.$refs.xlsxTable.rawFile
+      const uploadFileRes = await uploadToOss(file)
+      if (!uploadFileRes) return
       const sheetData = {}
       for (let item of sheetDic) {
         const { value: prop, label: sheetName, keyMap, handleData } = item
@@ -80,6 +111,11 @@ export default {
         sheetData[prop] = handleData(changeArrKey(body, keyMap))
       }
       sheetData.date = formatDate(new Date())
+      const blob = this.jsonToBlob(sheetData)
+      const result = await uploadToOss(blob, {
+        useNormalName: true
+      })
+      console.log('result', result)
       this.dataBaseDate = sheetData.date
       instanceCacheSheet.update(sheetData)
       updateSheetData(sheetData)

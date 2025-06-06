@@ -20,11 +20,9 @@
     window.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
     if (isTouchDevice) {
       document.querySelector('meta[name=viewport]').content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
-      setTimeout(() =>{
-        document.body.classList.add('global-touch-device')
-      }, 20)
     }
   </script>
+  <script type="text/javascript" src="<%= BASE_URL %>js/ossSdk.js"></script>
 </head>
 
 <body>
@@ -35,6 +33,11 @@
 <div id="app"></div>
 <!-- built files will be auto injected -->
 <script type="text/javascript" src="<%= BASE_URL %>js/pdf/pdf.js"></script>
+<script type="text/javascript">
+  if (isTouchDevice) {
+    document.body.classList.add('global-touch-device')
+  }
+</script>
 </body>
 
 </html>
