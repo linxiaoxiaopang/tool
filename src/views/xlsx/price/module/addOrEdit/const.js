@@ -217,6 +217,7 @@ export function getFormOption() {
       {
         label: '备注',
         prop: 'remarks',
+        type: 'textarea',
         value: '由于市场竞争，特申请金融补贴____元，请领导审批！'
       }
     ]

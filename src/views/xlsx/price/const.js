@@ -298,10 +298,6 @@ export const option = {
     {
       label: '备注',
       prop: 'remarks',
-      props: {
-        type: 'textarea'
-      },
-      type: 'textarea',
       isExport: true
     }
   ]
