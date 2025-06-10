@@ -20,6 +20,7 @@ import { getFormOption, SELECTED_KEY_MAP } from './const'
 import { cloneDeep, isArray, isUndefined } from 'lodash'
 import { changeArrKey } from '@/utils'
 import { CalculationCar } from '@/views/xlsx/price/module/addOrEdit/utils'
+import { formatDate } from 'element-ui/src/utils/date-util'
 
 export default {
   props: {
@@ -35,6 +36,7 @@ export default {
     return {
       selectedContent: '',
       form: {
+        createDate: formatDate(new Date(), 'MM月dd日'),
         insuranceGift: 0,
         financialSubsidy: 0,
         invoicePriceCalculation: 0

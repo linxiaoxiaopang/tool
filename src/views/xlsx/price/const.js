@@ -177,6 +177,11 @@ export const option = {
       isExport: true
     },
     {
+      label: '日期',
+      prop: 'createDate',
+      isExport: true
+    },
+    {
       label: '购买车型',
       prop: 'purchasedModel',
       isExport: true
