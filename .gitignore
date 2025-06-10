@@ -25,4 +25,4 @@ pnpm-debug.log*
 
 *.sw?
 **/.idea/
-accessKey.js
+#accessKey.js
