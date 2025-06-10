@@ -101,24 +101,29 @@ export default {
     },
 
     async onSelectMapData(excelData) {
-      const file = this.$refs.xlsxTable.rawFile
-      const uploadFileRes = await uploadToOss(file)
-      if (!uploadFileRes) return
-      const sheetData = {}
-      for (let item of sheetDic) {
-        const { value: prop, label: sheetName, keyMap, handleData } = item
-        const { body } = excelData[sheetName]
-        sheetData[prop] = handleData(changeArrKey(body, keyMap))
+      try {
+        const file = this.$refs.xlsxTable.rawFile
+        const uploadFileRes = await uploadToOss(file)
+        if (!uploadFileRes) return
+        const sheetData = {}
+        for (let item of sheetDic) {
+          const { value: prop, label: sheetName, keyMap, handleData } = item
+          const { body } = excelData[sheetName]
+          sheetData[prop] = handleData(changeArrKey(body, keyMap))
+        }
+        sheetData.date = formatDate(new Date())
+        const blob = this.jsonToBlob(sheetData)
+        const result = await uploadToOss(blob, {
+          useNormalName: true
+        })
+        console.log('result', result)
+        this.dataBaseDate = sheetData.date
+        instanceCacheSheet.update(sheetData)
+        updateSheetData(sheetData)
+      } catch (error) {
+        this.$message.error(error.toString())
+        throw error
       }
-      sheetData.date = formatDate(new Date())
-      const blob = this.jsonToBlob(sheetData)
-      const result = await uploadToOss(blob, {
-        useNormalName: true
-      })
-      console.log('result', result)
-      this.dataBaseDate = sheetData.date
-      instanceCacheSheet.update(sheetData)
-      updateSheetData(sheetData)
     },
 
     onDelete(row) {

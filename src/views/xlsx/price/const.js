@@ -138,20 +138,20 @@ export const sheetDic = [
       })
     },
     keyMap: filingKeyMap
-  },
-  {
-    label: '免息',
-    value: 'interestFree',
-    handleData(data) {
-      return data.map(item => {
-        const { productName, dealerProfitAfterDiscount } = item
-        item.label = productName
-        item.value = dealerProfitAfterDiscount
-        return item
-      })
-    },
-    keyMap: interestFreeMap
   }
+  // {
+  //   label: '免息',
+  //   value: 'interestFree',
+  //   handleData(data) {
+  //     return data.map(item => {
+  //       const { productName, dealerProfitAfterDiscount } = item
+  //       item.label = productName
+  //       item.value = dealerProfitAfterDiscount
+  //       return item
+  //     })
+  //   },
+  //   keyMap: interestFreeMap
+  // }
 ]
 
 

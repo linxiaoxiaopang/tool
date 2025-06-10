@@ -3,14 +3,15 @@ import { analysisFileByAxios, getFillFileName, isFile } from '@/utils/utils/file
 import { getUUID } from '@/utils'
 import { Message } from 'element-ui'
 import { isString } from 'lodash'
+import { accessKeyId, accessKeySecret } from './accessKey'
 
 const client = new OSS({
   // yourRegion填写Bucket所在地域。以华东1（杭州）为例，yourRegion填写为oss-cn-hangzhou。
   region: 'oss-cn-beijing',
   authorizationV4: true,
   // 从STS服务获取的临时访问密钥（AccessKey ID和AccessKey Secret）。
-  accessKeyId: 'LTAI5t8jvtQrUDXJ2b3mAVR7',
-  accessKeySecret: 'fqzD00TRCShXXQws0LxB0Qf4NQthCf',
+  accessKeyId,
+  accessKeySecret,
   // 填写Bucket名称。
   bucket: 'lgy-tool'
 })
