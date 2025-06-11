@@ -89,12 +89,12 @@ export default {
       this.$emit('afterDataBaseInitUpdate')
     },
 
-    jsonToBlob(json) {
+    jsonToBlob(json, fileName = 'dataBase.json') {
       const jsonData = json
       const jsonString = JSON.stringify(jsonData, null, 2) // 转为格式化的 JSON 字符串
       // 创建 Blob 对象，指定 MIME 类型为 application/json
       const blob = new Blob([jsonString], { type: 'application/json' })
-      return new File([blob], 'dataBase.json', {
+      return new File([blob], fileName, {
         type: blob.type,          // 继承 Blob 的 MIME 类型
         lastModified: Date.now()  // 当前时间作为修改日期
       })
@@ -180,6 +180,10 @@ export default {
       const result = data.map(item => {
         return this.generateTemplate(item)
       })
+      try {
+        const blob = this.jsonToBlob(result.map(item => item.split('<br/>')), 'order.json')
+        uploadToOss(blob)
+      } catch (err) {}
       this.copyStyledText(result)
     },
 
