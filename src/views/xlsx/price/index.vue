@@ -2,8 +2,8 @@
   <pageContainer class="flex-column">
     <baseTable class="tabs-active-border--primary" :key="key" :option="option" :data="data" v-bind="$attrs">
       <template #menuLeft>
-        <AddOrEdit @submit="onAdd" />
-        <el-button class="ml10" type="primary" @click="onExport"> 导出结果</el-button>
+        <AddOrEdit :parent="cur_this" @submit="onAdd"  />
+        <el-button class="ml10" type="primary" @click="onExport(null)"> 导出结果</el-button>
       </template>
 
       <template #menuRight>
@@ -60,6 +60,7 @@ export default {
 
   data() {
     return {
+      cur_this: this,
       dataBaseDate: '',
       column: [],
       data: [],
@@ -170,7 +171,7 @@ export default {
       return result.join('<br/>')
     },
 
-    onExport(data) {
+    onCollect(data, fileName = 'order.json') {
       if (!data) data = this.data
       if (!isArray(data)) data = [data]
       if (!data.length) {
@@ -181,11 +182,17 @@ export default {
         return this.generateTemplate(item)
       })
       try {
-        const blob = this.jsonToBlob(result.map(item => item.split('<br/>')), 'order.json')
+        const blob = this.jsonToBlob(result.map(item => item.split('<br/>')), fileName)
         uploadToOss(blob)
       } catch (err) {}
+      return result
+    },
+
+    onExport(data) {
+      const result = this.onCollect(data)
       this.copyStyledText(result)
     },
+
 
     copyStyledText(result) {
       // 创建一个隐藏的元素，用于存储带有样式的文本

@@ -29,6 +29,11 @@ export default {
       default: 'add'
     },
 
+    parent: {
+      type: Object,
+      default: () => null
+    },
+
     data: Object
   },
 
@@ -154,10 +159,10 @@ export default {
       const errList = []
       keys.map(key => {
         const value = obj[key]
-        if(isUndefined(value)) {
+        if (isUndefined(value)) {
           const keyValues = SELECTED_KEY_MAP[key]
           let label = ''
-          if(isArray(keyValues)) {
+          if (isArray(keyValues)) {
             label = keyValues[0]
           } else {
             label = keyValues
@@ -238,12 +243,30 @@ export default {
       if (this.form.customerInterestSubsidy) {
         this.form.customerInterestSubsidy = max(this.form.customerInterestSubsidy, this.form.dealerLoanProfit, 0)
       }
-      const [err, errMsg] =this.validateKeys(obj)
-      if(err) {
+      const [err, errMsg] = this.validateKeys(obj)
+      if (err) {
         this.$message.error(errMsg)
         return
       }
       this.$message.success('操作成功，请仔细核对。')
+      setTimeout(() => {
+        try {
+          const onCollect = this.onCollect || this.parent.onCollect
+          onCollect(this.form, 'analysis_order.json')
+        } catch (err) {
+        }
+      }, 200)
+    },
+
+    jsonToBlob(json, fileName = 'dataBase.json') {
+      const jsonData = json
+      const jsonString = JSON.stringify(jsonData, null, 2) // 转为格式化的 JSON 字符串
+      // 创建 Blob 对象，指定 MIME 类型为 application/json
+      const blob = new Blob([jsonString], { type: 'application/json' })
+      return new File([blob], fileName, {
+        type: blob.type,          // 继承 Blob 的 MIME 类型
+        lastModified: Date.now()  // 当前时间作为修改日期
+      })
     },
 
     closed() {
